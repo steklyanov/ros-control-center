@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--    ROS HEADERS-->
+    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script src="https://static.robotwebtools.org/keyboardteleopjs/current/keyboardteleop.min.js"></script>
+
+
+
+<!--    BOOTSTRAP HEADERS-->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+
+    <!--    MY JS FILE-->
+    <script src="scripts.js"></script>
+<!--    MY CSS FILE-->
+    <link rel="stylesheet" href="style.css">
+    <title>ROS</title>
+</head>
+<body>
+    <button id="getNodes" onclick="getNode()" type="button" class="btn btn-danger">Publish Message
+    </button>
+
+    <div class="wrapper">
+        <div id="MessageForm">
+            <label for="MessageForm"> Some topic</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">message</span>
+                </div>
+                <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon2">message</span>
+                </div>
+                <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+</body>
+</html>
+
