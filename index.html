@@ -22,7 +22,10 @@
     <title>ROS</title>
 </head>
 <body>
-    <button id="getNodeDetail" onclick="getNodeDetail()" type="button" class="btn btn-danger">Publish Message
+    <button id="getNodeDetail" onclick="getNodeDetail()" type="button" class="btn btn-danger">Get Details
+    </button>
+
+    <button id="PostNodeDetail" onclick="postNodeDetail()" type="button" class="btn btn-danger">Publish Details
     </button>
 
     <div class="wrapper">
@@ -42,8 +45,9 @@
                 <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
             </div>
         </div>
-
-
+    <h1> <div id="node_list"></div> </h1>
+    <div id="subscriber_list"></div>
+    <div id="publisher_list"></div>
     </div>
 
 
