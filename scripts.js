@@ -13,8 +13,6 @@ function getNodeDetail() {
     });
     let request = new ROSLIB.ServiceRequest({});
     detailClient.callService(request, function (result) {
-        document.getElementById("node_list").innerHTML = result;
-        node_array = result;
         splitNodes(result);
     });
 }
@@ -31,19 +29,19 @@ function getTopicDetail(item) {
         ros: rbServer,
         name: 'rosapi/node_details',
         serviceType: 'rosapi/NodeDetails'
-    })
+    });
     let request = new ROSLIB.ServiceRequest({
         node : item
-    })
+    });
 
     topicDetail.callService(request, function (result) {
         node_array[item] = result;
         result.publishing.forEach(function (elem) {
             getTopicMessageTypeSub(elem, item)
-        })
+        });
         result.subscribing.forEach(function (elem) {
             getTopicMessageTypePub(elem, item)
-        })
+        });
         result.services.forEach(function (elem) {
             getServiceMessageType(elem, item)
         })
@@ -55,11 +53,11 @@ function getTopicMessageTypeSub(item, name) {
         ros: rbServer,
         name: 'rosapi/topic_type',
         serviceType: 'rosapi/TopicType'
-    })
+    });
     // console.log(item, index)
     let request = new ROSLIB.ServiceRequest({
         topic : item
-    })
+    });
     messageType.callService(request, function (result) {
         node_array[name]['subscribing'][item] = result.type;
     })
@@ -71,14 +69,13 @@ function getServiceMessageType(item, name) {
         ros: rbServer,
         name: 'rosapi/service_type',
         serviceType: 'rosapi/ServiceType'
-    })
+    });
     // console.log(item, index)
     let request = new ROSLIB.ServiceRequest({
         service : item
-    })
+    });
     messageType.callService(request, function (result) {
         node_array[name]['services'][item] = result.type;
-        document.getElementById("publisher_list").innerHTML = result;
     })
 
 }
@@ -88,30 +85,34 @@ function getTopicMessageTypePub(item, name) {
         ros: rbServer,
         name: 'rosapi/topic_type',
         serviceType: 'rosapi/TopicType'
-    })
+    });
     // console.log(item, index)
     let request = new ROSLIB.ServiceRequest({
         topic : item
-    })
+    });
     messageType.callService(request, function (result) {
         node_array[name]['publishing'][item] = result.type;
     })
-
 }
 
 function postNodeDetail() {
     console.log(node_array);
+    createForm(node_array);
 }
 
-function createForm(title, body) {
+function createForm(node_array) {
+    for (key in node_array) {
+        createTopic(node_array[key]);
+    }
+}
 
-    var newDiv = document.createElement('div')
-    newDiv.className = 'my-class'
-    newDiv.id = 'my-id'
-    newDiv.style.backgroundColor = 'red'
+function createTopic(node_list) {
+    let container = document.createElement('div')
 
-    newDiv.innerHTML = 'Привет, мир!'
-    newDiv.appendChild()
+    for (node in node_list) {
+
+    }
+
 }
 
 function createMessage(title, body) {
