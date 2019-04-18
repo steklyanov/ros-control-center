@@ -23,9 +23,11 @@
 //     });
 // }
 
-function init() {
+function init(ip_addres) {
+    let str1 = 'ws://';
+    res = str1.concat(ip_addres);
     var rbServer = new ROSLIB.Ros({
-        url : 'ws://10.0.1.7:9090'
+        url : res
     });
     create_navigation(rbServer)
 
