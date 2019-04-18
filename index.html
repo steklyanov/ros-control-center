@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--    ROS HEADERS-->
-    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <meta charset="UTF-8">
+
+    <script src="https://static.robotwebtools.org/EaselJS/current/easeljs.js"></script>
     <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
-    <script src="https://static.robotwebtools.org/keyboardteleopjs/current/keyboardteleop.min.js"></script>
+    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.js"></script>
+    <script src="https://static.robotwebtools.org/ros2djs/current/ros2d.js"></script>
+    <script type="text/javascript" src="http://static.robotwebtools.org/nav2djs/current/nav2d.min.js"></script>
 
-
-
-<!--    BOOTSTRAP HEADERS-->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <meta charset="UTF-8">
+
+    <script src="https://static.robotwebtools.org/keyboardteleopjs/current/keyboardteleop.min.js"></script>
 
     <!--    MY JS FILE-->
     <script src="scripts.js"></script>
+    <script src="navigation.js"></script>
 <!--    MY CSS FILE-->
     <link rel="stylesheet" href="style.css">
     <title>ROS</title>
 </head>
-<body>
+<body onload="init()">
     <button id="getNodeDetail" onclick="getNodeDetail()" type="button" class="btn btn-danger">Get Details
     </button>
 
@@ -34,6 +36,12 @@
                 TOPIC TYPE
             </div>
             <div class="card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="robot_address">robot IP address</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
                 <div id="MessageForm">
                     <label for="MessageForm"> Some topic</label>
                     <div class="input-group mb-3">
@@ -47,8 +55,90 @@
             </div>
         </div>
     </div>
+    <div class="nav" id="nav"></div>
 
 
+<!-- controller part-->
+
+    <div class="card col-sm-3">
+        <div class="card-body">
+            Circular motions
+        </div>
+    </div>
+    <div>
+        <form>
+            <div class="form-group row">
+                <label for="linearXText" class="col-sm-1 col-form-label">Linear X</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="linearXText" name="linearXText">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="angularZText" class="col-sm-1 col-form-label">Angular Y</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="angularZText" name="angularZText">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button id="sendMsg" onclick="pubMessage()" type="button" class="btn btn-danger disabled">Publish Message
+                    </button>
+                </div>
+            </div>
+            <div id="feedback"></div>
+        </form>
+
+        <form>
+            <div class="form-group row">
+                <label for="linearXText" class="col-sm-1 col-form-label">Linear X</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="x_position" name="x_position">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="angularZText" class="col-sm-1 col-form-label">Angular Y</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="y_position" name="y_position">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button id="teleport_turtle_btn" onclick="teleport_turtle()" type="button" class="btn btn-danger disabled">Teleport
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- MEDIUM -->
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class=" col-md-4">
+            <label for="robot-speed">
+                <strong>Robot speed</strong>
+            </label>
+            <input type="range" min="15" max="80" class="custom-range" id="robot-speed">
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="row my-4">
+        <div class="col d-flex justify-content-center">
+            <img src="" class="p-1 bg-dark" alt="" id="video" />
+        </div>
+    </div>
+
+    <!-- JOYSTICK -->
+    <div class="row my-4">
+        <div class="col">
+            <div class="d-flex justify-content-center" style="width: 210px; height: 210px;">
+                <div id="joystick"></div>
+            </div>
+        </div>
+    </div>
 
 
 </body>

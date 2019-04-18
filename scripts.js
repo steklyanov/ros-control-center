@@ -1,9 +1,36 @@
 
 
-let rbServer = new ROSLIB.Ros({
-    url: 'ws://localhost:9090'
+// function init() {
+//     // Connect to ROS.
+//     var rbServer = new ROSLIB.Ros({
+//         url : 'ws://10.0.1.7:9090'
+//     });
+//
+//     // Create the main viewer.
+//     var viewer = new ROS2D.Viewer({
+//         divID : 'nav',
+//         width : 750,
+//         height : 800
+//     });
+//     // Setup the nav client.
+//     var nav = NAV2D.OccupancyGridClientNav({
+//         ros : rbServer,
+//         rootObject : viewer.scene,
+//         viewer : viewer,
+//         continuous : true,
+//         tfClient   : '/tf',
+//         serverName : '/move_base',
+//     });
+// }
 
-});
+function init() {
+    var rbServer = new ROSLIB.Ros({
+        url : 'ws://10.0.1.7:9090'
+    });
+    create_navigation(rbServer)
+
+}
+
 let node_array = {};
 function getNodeDetail() {
     let detailClient = new ROSLIB.Service({

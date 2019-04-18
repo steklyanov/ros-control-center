@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  master:
+    build: .
+    environment:
+      - "ROS_IP=172.19.0.3"
+    command: roscore
+
+  publisher:
+    build: .
+    environment:
+      - "ROS_IP=172.19.0.4"
+      - "ROS_MASTER_URI=http://master:11311"
+    command: rostopic pub /listener std_msgs/String "Hello, World"
+
+#  listener:
+#    build: .
+#    environment:
+#      - "ROS_IP=172.19.0.2"
+#      - "ROS_MASTER_URI=http://master:11311"
+#    command: rostopic echo /cmd_vel
+#
+#  launcher:
+#    build: .
+#    environment:
+#      - "ROS_IP=172.19.0.2"
+#      - "ROS_MASTER_URI=http://master:11311"
+#    command: rostopic echo /cmd_vel
