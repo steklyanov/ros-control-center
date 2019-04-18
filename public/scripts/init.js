@@ -4,6 +4,7 @@ let node_array = {}; // basic array to collect all nodes with info
 let twist;
 let ros;
 let cmdVel;
+let ip;
 var teleop; // necessary object for checking teleop
 // first init  in InitTeleopKeyboard()
 var manager; // necessary object for checking teleop
@@ -13,7 +14,9 @@ var publishImmidiately = true; // see more in createJoystick() func
 
 function init(ip_addres) {
     let str1 = 'ws://';
-    res = str1.concat(ip_addres);
+    mid = str1.concat(ip_addres);
+    let str2 = ':9090';
+    res = mid.concat(str2);
     ros = new ROSLIB.Ros({
         url : res
     });
@@ -22,6 +25,7 @@ function init(ip_addres) {
     initVelocityPublisher();
     createJoystick();
     initTeleopKeyboard();
+    load_video();
     // This function is called upon the rosbridge connection event
     ros.on('connection', function () {
         // Write appropriate message to #feedback div when successfully connected to rosbridge
@@ -47,14 +51,21 @@ function init(ip_addres) {
     });
 }
 
+function load_video() {
+    video = document.getElementById('video');
+    // Populate video source
+    video.src = "http://" + ip + ":8080/stream?topic=/camera/color/image_raw&type=mjpeg&quality=80";
+
+}
+
 // FUnction to disable buttons in case of losing connection from rosbridge
 function togleButton() {
     const btn = document.querySelector('#sendMsg');
-    if (btn.classList.contains('disabled')) {
-        btn.classList.remove('disabled')
-    } else {
-        btn.classList.add('disabled')
-    }
+    // if (btn.classList.contains('disabled')) {
+    //     btn.classList.remove('disabled')
+    // } else {
+    //     btn.classList.add('disabled')
+    // }
 }
 
 
