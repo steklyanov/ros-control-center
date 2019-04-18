@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://static.robotwebtools.org/EaselJS/current/easeljs.js"></script>
     <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
     <script src="https://static.robotwebtools.org/roslibjs/current/roslib.js"></script>
@@ -15,13 +15,15 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <script src="https://static.robotwebtools.org/keyboardteleopjs/current/keyboardteleop.min.js"></script>
-
+    <script src="https://yoannmoi.net/nipplejs/javascripts/nipplejs.js"></script>
     <!--    MY JS FILE-->
-    <script src="scripts/scripts.js"></script>
-    <script src="scripts/navigation.js"></script>
-    <script src="scripts/settings.js"></script>
+    <script src="public/scripts/settings.js"></script>
+    <script src="public/scripts/init.js"></script>
+    <script src="public/scripts/node_detail.js"></script>
+    <script src="public/scripts/navigation.js"></script>
+    <script src="public/scripts/webui.js"></script>
 <!--    MY CSS FILE-->
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="public/styles/style.css">
     <title>ROS</title>
 </head>
 <body onload="change_ip()">
@@ -90,60 +92,7 @@
     </div>
     <div class="nav" id="nav"></div>
 
-
 <!-- controller part-->
-
-    <div class="card col-sm-3">
-        <div class="card-body">
-            Circular motions
-        </div>
-    </div>
-    <div>
-        <form>
-            <div class="form-group row">
-                <label for="linearXText" class="col-sm-1 col-form-label">Linear X</label>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control" id="linearXText" name="linearXText">
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="angularZText" class="col-sm-1 col-form-label">Angular Y</label>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control" id="angularZText" name="angularZText">
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button id="sendMsg" onclick="pubMessage()" type="button" class="btn btn-danger disabled">Publish Message
-                    </button>
-                </div>
-            </div>
-            <div id="feedback"></div>
-        </form>
-
-        <form>
-            <div class="form-group row">
-                <label for="linearXText" class="col-sm-1 col-form-label">Linear X</label>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control" id="x_position" name="x_position">
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="angularZText" class="col-sm-1 col-form-label">Angular Y</label>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control" id="y_position" name="y_position">
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button id="teleport_turtle_btn" onclick="teleport_turtle()" type="button" class="btn btn-danger disabled">Teleport
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
 
     <!-- MEDIUM -->
     <div class="row">
@@ -172,7 +121,6 @@
             </div>
         </div>
     </div>
-
 
 </body>
 </html>
