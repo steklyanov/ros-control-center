@@ -54,7 +54,9 @@ function init(ip_addres) {
 function load_video() {
     video = document.getElementById('video');
     // Populate video source
-    video.src = "http://" + ip + ":8080/stream?topic=/camera/color/image_raw&type=mjpeg&quality=80";
+    // video.src = "http://" + ip + ":8080/stream?topic=/camera/color/image_raw&type=mjpeg&quality=80";
+    video.src = "http://" + ip + ":8080/stream?topic=/camera/color/image_raw&bitrate=250000&type=vp8";
+
 
 }
 

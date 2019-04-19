@@ -1,6 +1,6 @@
 function getNodeDetail() {
     let detailClient = new ROSLIB.Service({
-        ros: rbServer,
+        ros: ros,
         name: 'rosapi/nodes',
         serviceType: 'rosapi/Nodes'
     });
@@ -19,7 +19,7 @@ function splitNodes(result) {
 
 function getTopicDetail(item) {
     let topicDetail = new ROSLIB.Service({
-        ros: rbServer,
+        ros: ros,
         name: 'rosapi/node_details',
         serviceType: 'rosapi/NodeDetails'
     });
@@ -43,7 +43,7 @@ function getTopicDetail(item) {
 
 function getTopicMessageTypeSub(item, name) {
     let messageType = new ROSLIB.Service({
-        ros: rbServer,
+        ros: ros,
         name: 'rosapi/topic_type',
         serviceType: 'rosapi/TopicType'
     });
@@ -59,7 +59,7 @@ function getTopicMessageTypeSub(item, name) {
 
 function getServiceMessageType(item, name) {
     let messageType = new ROSLIB.Service({
-        ros: rbServer,
+        ros: ros,
         name: 'rosapi/service_type',
         serviceType: 'rosapi/ServiceType'
     });
@@ -75,7 +75,7 @@ function getServiceMessageType(item, name) {
 
 function getTopicMessageTypePub(item, name) {
     let messageType = new ROSLIB.Service({
-        ros: rbServer,
+        ros: ros,
         name: 'rosapi/topic_type',
         serviceType: 'rosapi/TopicType'
     });
