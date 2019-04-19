@@ -22,12 +22,16 @@
     <script src="public/scripts/node_detail.js"></script>
     <script src="public/scripts/navigation.js"></script>
     <script src="public/scripts/webui.js"></script>
+    <script src="public/scripts/lid_control.js"></script>
 <!--    MY CSS FILE-->
     <link rel="stylesheet" href="public/styles/style.css">
     <title>ROS</title>
 </head>
 <body onload="change_ip()">
-
+<!-- LID MANAGER -->
+<button type="button" id="lid_control" class="btn btn-primary" onclick="lid_button()">
+    Open lid
+</button>
 <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
         Settings

@@ -5,6 +5,7 @@ let twist;
 let ros;
 let cmdVel;
 let ip;
+let lid_action = Boolean;
 var teleop; // necessary object for checking teleop
 // first init  in InitTeleopKeyboard()
 var manager; // necessary object for checking teleop
@@ -70,9 +71,9 @@ function togleButton() {
     // }
 }
 
-
 function init_var()
 {
+    lid_action = false;
     // Init standard message to operate robot with zero values.
     twist = new ROSLIB.Message({
         linear: {

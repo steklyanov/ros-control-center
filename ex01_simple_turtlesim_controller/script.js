@@ -95,7 +95,6 @@ function pubMessage() {
 }
 
 
-
 function teleport_turtle() {
 
     var TeleportTurtle = new ROSLIB.Service({
@@ -117,7 +116,3 @@ function teleport_turtle() {
   });
 
 }
-
-
-
-
