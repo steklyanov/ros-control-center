@@ -3,6 +3,12 @@
 _This package provide all necessary functionality to control your
 robot from web browser_
 
+
+Stack:
+* Backend: Node Js
+* Frontend: Vue Js
+*  
+
 ###### This version allow you:
 * run robot using keyboard
 * run robot using joystic
@@ -26,7 +32,7 @@ _On the server side(it can be a robot as well):_
     git clone https://github.com/steklyanov/ros-control-center
     cd ros-control-center
     npm install
-    node app.js
+    node indexex.js
 _On the robot side:_   
 
     run your robot moving, navigation nodes
