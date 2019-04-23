@@ -1,8 +1,8 @@
 <template>
-  <div class="main">
-    <img alt="ROS logo" src="../assets/ros.png">
-    <HelloWorld msg="Main template"/>
-  </div>
+<!--  <div class="main">-->
+<!--    <img alt="ROS logo" src="../assets/ros.png">-->
+    <MainStructure msg="Main template"/>
+<!--  </div>-->
 </template>
 
 <script>
