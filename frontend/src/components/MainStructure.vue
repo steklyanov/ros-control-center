@@ -23,7 +23,7 @@
       <a class="nav-link" href="#">History</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Settings</a>
+      <a class="nav-link" href="#" @click="goPage('settings')">Settings</a>
     </li>
     <li class="nav-item">
       <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
@@ -65,7 +65,12 @@ export default {
   name: 'MainStructure',
   props: {
     msg: String
-  }
+  },
+    methods: {
+      goPage(item) {
+          this.$router.push({name: item})
+      }
+    }
 }
 </script>
 

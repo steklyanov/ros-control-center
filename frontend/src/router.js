@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import MainStructure from "./components/MainStructure";
+import Settings from "./views/Settings";
 
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ export default new Router({
       path: '/main',
       name: 'main',
       component: MainStructure
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Settings
     }
   ]
 })
