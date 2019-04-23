@@ -7,7 +7,8 @@ robot from web browser_
 Stack:
 * Backend: Node Js
 * Frontend: Vue Js
-*  
+* Database: MongoDB
+ 
 
 ###### This version allow you:
 * run robot using keyboard
