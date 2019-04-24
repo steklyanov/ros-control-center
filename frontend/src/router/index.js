@@ -18,6 +18,7 @@ import Router from 'vue-router'
 import Home from '@/views/Home.vue'
 import MainStructure from "@/components/MainStructure"
 import Settings from "@/views/Settings"
+import SendPresent from "../views/SendPresent";
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ export default new Router({
       path: '/settings',
       name: 'settings',
       component: Settings
+    },
+    {
+      path: '/send_present',
+      name: 'send_present',
+      component: SendPresent
     }
   ]
 })

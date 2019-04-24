@@ -1,12 +1,12 @@
 <template>
-<!--  <div class="main">-->
-<!--    <img alt="ROS logo" src="../assets/ros.png">-->
-    <MainStructure msg="Main template"/>
-<!--  </div>-->
+    <MainStructure msg="Bla bla bla">
+
+    </MainStructure>
+  <PageSeparator></PageSeparator>
 </template>
 
 <script>
-// @ is an alias to /src
+
 import MainStructure from '@/components/MainStructure.vue'
 
 export default {
