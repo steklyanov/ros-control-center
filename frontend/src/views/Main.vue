@@ -1,18 +1,24 @@
 <template>
+  <div>
+    <NavBar></NavBar>
     <MainStructure msg="Bla bla bla">
 
     </MainStructure>
-  <PageSeparator></PageSeparator>
+  </div>
+
 </template>
 
 <script>
 
 import MainStructure from '@/components/MainStructure.vue'
+import NavBar from '@/components/NavBar.vue'
 
 export default {
   name: 'main',
   components: {
-    MainStructure
+    MainStructure,
+    NavBar
   }
 }
+
 </script>

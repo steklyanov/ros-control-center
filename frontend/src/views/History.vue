@@ -5,18 +5,15 @@
 </template>
 
 <script>
-
   import NavBar from "../components/NavBar";
   export default {
-    data() {
-      return {activeItem: 'send_present'}
-    },
-    name: "SendPresent",
+    name: "History",
     components: {
       NavBar
     }
   }
 </script>
+
 
 <style scoped>
 

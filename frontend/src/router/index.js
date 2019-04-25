@@ -1,24 +1,11 @@
-// import Vue from 'vue'
-// import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
-//
-// Vue.use(Router)
-//
-// export default new Router({
-//   routes: [
-//     {
-//       path: '/',
-//       name: 'HelloWorld',
-//       component: HelloWorld
-//     }
-//   ]
-// })
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/views/Home.vue'
-import MainStructure from "@/components/MainStructure"
 import Settings from "@/views/Settings"
+import Main from "@/views/Main"
 import SendPresent from "../views/SendPresent";
+import Navigation from "../views/Navigation";
+import VoiceControl from "../views/VoiceControl";
+import History from "../views/History";
 
 Vue.use(Router)
 
@@ -26,11 +13,6 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
     {
       path: '/about',
       name: 'about',
@@ -42,7 +24,7 @@ export default new Router({
     {
       path: '/main',
       name: 'main',
-      component: MainStructure
+      component: Main
     },
     {
       path: '/settings',
@@ -53,6 +35,21 @@ export default new Router({
       path: '/send_present',
       name: 'send_present',
       component: SendPresent
-    }
+    },
+    {
+      path: '/navigation',
+      name: 'navigation',
+      component: Navigation
+    },
+    {
+      path: '/voice_control',
+      name: 'voice_control',
+      component: VoiceControl
+    },
+    {
+      path: '/history',
+      name: 'history',
+      component: History
+    },
   ]
 })
