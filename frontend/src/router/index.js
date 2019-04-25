@@ -6,6 +6,7 @@ import SendPresent from "../views/SendPresent";
 import Navigation from "../views/Navigation";
 import VoiceControl from "../views/VoiceControl";
 import History from "../views/History";
+import Test from "../services/Test";
 
 Vue.use(Router)
 
@@ -51,5 +52,10 @@ export default new Router({
       name: 'history',
       component: History
     },
+    {
+      path: '/test',
+      name: 'Test',
+      component: Test
+    }
   ]
 })
