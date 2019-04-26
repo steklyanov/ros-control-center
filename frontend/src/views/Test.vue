@@ -19,6 +19,7 @@
       name: "Test",
       async mounted () {
         this.nodes = await Test.index()
+        console.log(this.nodes)
       }
 
     }

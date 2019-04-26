@@ -10,6 +10,8 @@ import Settings from '@/components/Settings.vue'
           Settings
         }
     }
+
+    // this.$store.commit('SET_NAME', your_name);
 </script>
 
 <style scoped>

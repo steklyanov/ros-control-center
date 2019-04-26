@@ -1,7 +1,7 @@
 const config = require('../config/config')
 
 module.exports = {
-    async index(req, res) {
+    async get(req, res) {
         try {
 
             res.send('hello')

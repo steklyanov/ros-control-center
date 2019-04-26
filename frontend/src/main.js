@@ -7,13 +7,15 @@ import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import {store} from './store';
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  router,
+  store: store,
+  router: router,
   components: { App },
   template: '<App/>'
 })

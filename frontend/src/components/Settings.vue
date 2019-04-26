@@ -16,12 +16,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon3">IP-address</span>
                             </div>
-                            <input type="text" id="ip_address" class="form-control" value="10.0.1.7" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="text"  ref="ip_field" id="ip_address" class="form-control" value="10.0.1.7" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" onclick="change_ip()" data-dismiss="modal" class="btn btn-primary">Save changes</button>
+                        <button type="button" v-on:click="save_settings()" data-dismiss="modal" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -30,9 +30,17 @@
 </template>
 
 <script>
-/* eslint-disable */
     export default {
-        name: "Settings"
+        name: "Settings",
+        data: {
+        },
+        methods: {
+          save_settings() {
+            let ip = this.$refs.ip_field.value;
+            this.$store.commit('SET_IP_ADDRESS', ip);
+            console.log(ip);
+          }
+        }
     }
 </script>
 
