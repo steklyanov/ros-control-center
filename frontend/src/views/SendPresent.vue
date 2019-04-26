@@ -1,19 +1,12 @@
 <template>
   <div>
-    <NavBar></NavBar>
   </div>
 </template>
 
 <script>
-
-  import NavBar from "../components/NavBar";
   export default {
-    data() {
-      return {activeItem: 'send_present'}
-    },
     name: "SendPresent",
     components: {
-      NavBar
     }
   }
 </script>

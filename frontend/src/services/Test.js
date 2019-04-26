@@ -1,6 +1,6 @@
 import api from '@/services/api'
 export default {
-  fetchNodes () {
+  index () {
     return api().get('test')
   }
 }

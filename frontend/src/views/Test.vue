@@ -1,28 +1,26 @@
 <template>
-  <ul class="list-group" v-for="(node, index) in nodes">
-    <li class="list-group-item">{{ node }}</li>
+  <div>
+    <ul class="list-group" v-for="(node, index) in nodes">
+      <li class="list-group-item">{{ node }} {{ index }}</li>
 
-  </ul>
+    </ul>
+  </div>
+
 </template>
 
 <script>
   import Test from '@/services/Test'
     export default {
-        name: "Test",
-      data() {
-          return {
-            nodes: []
-          }
+      data () {
+        return {
+          nodes: null
+        }
       },
-      methods: {
-          async getNodes() {
-            const response = await Test.fetchNodes()
-            this.nodes = response.data.nodes
-          }
-      },
-      mounted() {
-          this.getNodes()
+      name: "Test",
+      async mounted () {
+        this.nodes = await Test.index()
       }
+
     }
 </script>
 

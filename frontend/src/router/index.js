@@ -6,7 +6,8 @@ import SendPresent from "../views/SendPresent";
 import Navigation from "../views/Navigation";
 import VoiceControl from "../views/VoiceControl";
 import History from "../views/History";
-import Test from "../services/Test";
+import Test from "../views/Test";
+
 
 Vue.use(Router)
 

@@ -1,21 +1,14 @@
-const Post = require('../models/post-model')
-
+// const Post = require('../models/post-model')
 const express = require('express')
-const router = express.Router()
+const app = express();
+const test = express.Router()
 
-router.post('/test', (req, res) => {
-    // const post = new Post({
-    //     title: req.body.title,
-    //     description: req.body.description
-    // })
-    // post.save((err, data) => {
-    //     if (err) {
-    //         console.log(err)
-    //     } else {
-    //         res.send({
-    //             success: true,
-    //             message: `Post with ID_${data._id} saved successfully!`
-    //         })
-    //     }
-    // })
-})
+test.route('/').get(function (req, res) {
+    res.send({
+        nodes: "node"
+    })
+    console.log('Im on backend baby');
+    return ('try')
+
+});
+module.exports = test;
