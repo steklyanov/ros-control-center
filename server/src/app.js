@@ -14,12 +14,11 @@ app.use(cors())
 
 const config = require('./config/config');
 
-// const test = require('./routes/posts');
-// app.use('/test', test);
 const NodeController = require('./controllers/NodeController')
-
+const MainController = require('./controllers/MainController')
 app.get('/test', NodeController.index)
-
+app.get('/main', MainController.get)
+app.post('/main', MainController.post)
 // mongoose.connection
 // 	.once('open', () => {
 // 		console.log(`Mongoose - successful connection ...`)
