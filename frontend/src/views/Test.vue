@@ -11,12 +11,12 @@
 <script>
   import Test from '@/services/Test'
     export default {
+      name: "Test",
       data () {
         return {
           nodes: null
         }
       },
-      name: "Test",
       async mounted () {
         this.nodes = await Test.index()
         console.log(this.nodes)

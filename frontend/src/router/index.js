@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Settings from "@/views/Settings"
 import Main from "@/views/Main"
 import SendPresent from "../views/SendPresent";
 import Navigation from "../views/Navigation";
@@ -27,11 +26,6 @@ export default new Router({
       path: '/main',
       name: 'main',
       component: Main
-    },
-    {
-      path: '/settings',
-      name: 'settings',
-      component: Settings
     },
     {
       path: '/send_present',

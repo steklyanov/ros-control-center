@@ -5,12 +5,14 @@ robot from web browser_
 
 
 Stack:
-* Backend: Node Js
+* Backend: Node Js, Express 
 * Frontend: Vue Js
-* Database: MongoDB
+* Database and storage: MongoDB, Vuex
+* Builder: Webpack
  
+###### Version 2.0 approaching....
 
-###### This version allow you:
+###### In current version you can find following functionality:
 * run robot using keyboard
 * run robot using joystic
 * recieve data from lidar

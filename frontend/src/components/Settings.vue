@@ -32,8 +32,6 @@
 <script>
     export default {
         name: "Settings",
-        data: {
-        },
         methods: {
           save_settings() {
             let ip = this.$refs.ip_field.value;
