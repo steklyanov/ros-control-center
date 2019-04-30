@@ -7,7 +7,9 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     ip_address: null,
-    ros: null
+    ros: new ROSLIB.Ros,
+    twist: null,
+    cmdVel: null
   },
   getters: {
     IP_ADDRESS: state => {
@@ -21,17 +23,28 @@ export const store = new Vuex.Store({
     SET_IP_ADDRESS: (state, payload) => {
       state.ip_address = payload;
     },
-    CHANGE_ROS: (state, payload) => {
+    CHANGE_ROS: (state) => {
       state.ros = new ROSLIB.Ros({
-        url : payload
+        url : this.$store.getters.IP_ADDRESS
       });
+    },
+    CHANGE_CMDVEL: (state, payload) => {
+      state.cmdVel = payload;
+    },
+    CHANGE_TWIST: (state, payload) => {
+      state.twist = payload;
     }
   },
   actions: {
-    INIT_ROS: async (context, payload) => {
-      console.log('before')
-      context.commit('CHANGE_ROS', payload)
-      console.log('after')
+    INIT_ROS: async (context) => {
+
+      await context.commit('CHANGE_ROS')
+    },
+    INIT_CMDVEL: async (context, payload) => {
+      await context.commit('CHANGE_CMDVEL', payload)
+    },
+    INIT_TWIST: async (context, payload) => {
+      await context.commit('CHANGE_TWIST', payload)
     }
   }
 //   actions: {
