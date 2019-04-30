@@ -6,7 +6,7 @@ import Navigation from "../views/Navigation";
 import VoiceControl from "../views/VoiceControl";
 import History from "../views/History";
 import Test from "../views/Test";
-
+import HandControl from "../views/HandControl";
 
 Vue.use(Router)
 
@@ -51,6 +51,11 @@ export default new Router({
       path: '/test',
       name: 'Test',
       component: Test
+    },
+    {
+      path: '/hand_control',
+      name: 'Navigation center',
+      component: HandControl
     }
   ]
 })

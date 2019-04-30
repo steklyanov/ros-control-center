@@ -3,7 +3,6 @@
     <MainStructure>
 
     </MainStructure>
-    <Joystic></Joystic>
   </div>
 
 </template>
@@ -12,13 +11,10 @@
 
 import MainStructure from '@/components/MainStructure.vue'
 import Main from '@/services/Main'
-// import Joystic from '@/components/Joystic.vue'
-import Joystic from "../components/Joystic";
 
 export default {
   name: 'main',
   components: {
-    Joystic,
     MainStructure,
   },
 
