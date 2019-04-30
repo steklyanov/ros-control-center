@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
-mongoose.Promise = global.Promise
+// mongoose.Promise = global.Promise
 
 const app = express()
 
@@ -13,6 +13,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 const config = require('./config/config');
+app.use("/public", express.static(__dirname + "/public"));
 
 const NodeController = require('./controllers/NodeController')
 const MainController = require('./controllers/MainController')

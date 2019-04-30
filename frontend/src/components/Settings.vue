@@ -21,7 +21,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" v-on:click="save_settings()" data-dismiss="modal" class="btn btn-primary">Save changes</button>
+                        <button type="button"  data-dismiss="modal" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -30,13 +30,18 @@
 </template>
 
 <script>
+  import Main from '@/services/Main'
     export default {
         name: "Settings",
+        async mounted() {
+          await this.save_settings()
+        },
         methods: {
           save_settings() {
             let ip = this.$refs.ip_field.value;
             this.$store.commit('SET_IP_ADDRESS', ip);
             console.log(ip);
+            Main.post(ip)
           }
         }
     }

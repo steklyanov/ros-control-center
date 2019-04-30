@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'nipplejs/dist/nipplejs'
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import {store} from './store';
@@ -14,8 +15,8 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  store: store,
-  router: router,
+  store,
+  router,
   components: { App },
   template: '<App/>'
 })

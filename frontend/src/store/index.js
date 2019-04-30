@@ -14,7 +14,7 @@ export const store = new Vuex.Store({
   },
   mutations: {
     SET_IP_ADDRESS: (state, payload) => {
-      state.name = payload;
+      state.ip_address = payload;
     },
   },
 //   actions: {

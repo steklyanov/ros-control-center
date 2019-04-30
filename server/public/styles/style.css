@@ -1,0 +1,10 @@
+.wrapper {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    width: 750px;
+}
+
+.nav {
+    width : 750px;
+    height : 800px;
+}
