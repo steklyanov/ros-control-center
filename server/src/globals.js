@@ -1,6 +1,6 @@
 var Globals = {
     'ros': undefined,
-    'nodes': undefined,
+    'nodes': Array,
     'topics': Array,
 };
 module.exports = Globals;

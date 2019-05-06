@@ -45,20 +45,29 @@ async function init(ip_addres) {
 
 async function collect_data(ros) {
     ros.getNodes(function (nodes) {
-        globals.nodes = nodes;
         len = nodes.length;
         console.log(len);
         for (let i = 0; i < len; i++) {
             ros.getNodeDetails(nodes[i], function(data) {
-                    // data[i] = i;
-                    globals.topics[i] = Array.from(data);
-                    console.log(Array.from(data));
+                nodes[i]['subscribing'] = data['subscribing'];
+                nodes[i]['publishing'] = data['publishing'];
+                nodes[i]['services'] = data['services'];
+                nodes[i]['services'] = [];
+                nodes[i]['services'] = Object.entries(data['services']);
+                // console.log(nodes[i]['services']);
+                k = Object.entries(data['services'])
+                console.log(typeof(k));
+                // console.log(data['services']);
+                    // globals.topics[i] = Array.from(data);
+                    // console.log(data);
             })
         }
         if (nodes)
             console.log('parse nodes');
         else
             console.log('cant get nodes');
+        globals.nodes = nodes;
+        // console.log(globals.nodes);
     });
-    await console.log(globals.topics);
+    await console.log(globals.nodes);
 }
