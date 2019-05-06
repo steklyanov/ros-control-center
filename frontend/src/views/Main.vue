@@ -23,7 +23,9 @@ export default {
       console.log('im on front doing post')
       let ip = this.$store.getters.IP_ADDRESS;
       console.log(ip, 'wow')
-      await Main.post({'ip': ip})
+      await Main.post({'ip': ip}).then(request => {
+        all_data = request.data;
+      })
     } catch (err) {
       console.log(err)
     }
@@ -32,6 +34,8 @@ export default {
     console.log('im on front  doing GET')
     await Main.get()
     console.log(this.nodes)
+    // el: '#navbar',
+    //   data: all_data
   }
 }
 

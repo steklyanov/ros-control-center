@@ -25,7 +25,8 @@ export const store = new Vuex.Store({
     },
     CHANGE_ROS: (state) => {
       state.ros = new ROSLIB.Ros({
-        url : this.$store.getters.IP_ADDRESS
+        url : "ws://10.0.1.7:9090"
+        // url : this.$store.getters.IP_ADDRESS
       });
     },
     CHANGE_CMDVEL: (state, payload) => {
@@ -39,12 +40,6 @@ export const store = new Vuex.Store({
     INIT_ROS: async (context) => {
 
       await context.commit('CHANGE_ROS')
-    },
-    INIT_CMDVEL: async (context, payload) => {
-      await context.commit('CHANGE_CMDVEL', payload)
-    },
-    INIT_TWIST: async (context, payload) => {
-      await context.commit('CHANGE_TWIST', payload)
     }
   }
 //   actions: {

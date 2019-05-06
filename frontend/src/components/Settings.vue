@@ -16,7 +16,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon3">IP-address</span>
                             </div>
-                            <input type="text"  ref="ip_field" id="ip_address" class="form-control" value="ws://localhost:9090" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="text"  ref="ip_field" id="ip_address" class="form-control" value="ws://10.0.1.7:9090" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="modal-footer">
