@@ -41,7 +41,6 @@
             let ip = this.$refs.ip_field.value;
             this.$store.commit('SET_IP_ADDRESS', ip);
             console.log(ip);
-            Main.post(ip)
           }
         }
     }

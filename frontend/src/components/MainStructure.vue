@@ -135,7 +135,7 @@
 </template>
 
 <script>
-/* eslint-disable */
+  const ROSLIB = require('roslib');
 export default {
   name: 'MainStructure',
   props: {
@@ -144,9 +144,18 @@ export default {
     methods: {
       goPage(item) {
           this.$router.push({name: item})
+      },
+      getData() {
+        console.log('POST main backend:');
+        console.log(this.$store.dispatch("INIT_ROS"));
       }
-    }
+    },
+  mounted() {
+    this.getData()
+  }
 }
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
