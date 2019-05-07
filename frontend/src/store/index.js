@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-const ROSLIB = require('roslib')
+const ROSLIB = require('roslib');
 
 Vue.use(Vuex);
 
@@ -8,10 +8,12 @@ export const store = new Vuex.Store({
   state: {
     ip_address: null,
     ros: new ROSLIB.Ros,
-    twist: null,
-    cmdVel: null
+    nodes: {}
   },
   getters: {
+    GET_NODES: state => {
+      return state.nodes;
+    },
     IP_ADDRESS: state => {
       return state.ip_address;
     },
@@ -20,25 +22,24 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    SET_NODES: (state, payload) => {
+      state.nodes = payload;
+    },
     SET_IP_ADDRESS: (state, payload) => {
       state.ip_address = payload;
     },
     CHANGE_ROS: (state) => {
       state.ros = new ROSLIB.Ros({
-        url : "ws://10.0.1.7:9090"
-        // url : this.$store.getters.IP_ADDRESS
+        // url : "ws://10.0.1.7:9090"
+        url: state.ip_address
       });
-    },
-    CHANGE_CMDVEL: (state, payload) => {
-      state.cmdVel = payload;
-    },
-    CHANGE_TWIST: (state, payload) => {
-      state.twist = payload;
     }
   },
   actions: {
+    UPDATE_NODES: async (context, payload) => {
+      await context.commit('SET_NODES', payload);
+    },
     INIT_ROS: async (context) => {
-
       await context.commit('CHANGE_ROS')
     }
   }

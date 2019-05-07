@@ -1,13 +1,13 @@
 <template>
   <div class="wrapper">
-
+    <button v-on:click="createTable"> UPDATE</button>
     <div class="row">
       <div class=" card col-md-3 order-md-1 mb-4 bg-light">
         <div class="card-header">
           HEADER
         </div>
-        <div id="list-example" class="list-group" v-for="">
-          <a class="list-group-item list-group-item-action" href="#list-item-1">Item 1</a>
+        <div id="list-example" class="list-group" v-for="nodes in this.$store.getters.GET_NODES">
+          <a class="list-group-item list-group-item-action" href="#list-item-1">{{ nodes }}</a>
           <a class="list-group-item list-group-item-action" href="#list-item-2">Item 2</a>
           <a class="list-group-item list-group-item-action" href="#list-item-3">Item 3</a>
           <a class="list-group-item list-group-item-action" href="#list-item-4">Item 4</a>
@@ -141,20 +141,127 @@ export default {
   props: {
     msg: String
   },
+  data: {
+      node_name: null,
+  },
     methods: {
       goPage(item) {
           this.$router.push({name: item})
       },
       getData() {
-        console.log('POST main backend:');
-        console.log(this.$store.dispatch("INIT_ROS"));
+        this.$store.dispatch("INIT_ROS");
+        let node_array = {};
+        let ros = this.$store.getters.GET_ROS;
+        getNodeDetail();
+        function getNodeDetail() {
+          let detailClient = new ROSLIB.Service({
+            ros: ros,
+            name: 'rosapi/nodes',
+            serviceType: 'rosapi/Nodes'
+          });
+          let request = new ROSLIB.ServiceRequest({});
+          detailClient.callService(request, function (result) {
+            splitNodes(result);
+          });
+        }
+        function splitNodes(result) {
+          // console.log(result.nodes);
+          result.nodes.forEach(function (item) {
+            getTopicDetail(item);
+          })
+        }
+
+        function getTopicDetail(item) {
+          let topicDetail = new ROSLIB.Service({
+            ros: ros,
+            name: 'rosapi/node_details',
+            serviceType: 'rosapi/NodeDetails'
+          });
+          let request = new ROSLIB.ServiceRequest({
+            node : item
+          });
+
+          topicDetail.callService(request, function (result) {
+            node_array[item] = result;
+            result.publishing.forEach(function (elem) {
+              getTopicMessageTypeSub(elem, item)
+            });
+            result.subscribing.forEach(function (elem) {
+              getTopicMessageTypePub(elem, item)
+            });
+            result.services.forEach(function (elem) {
+              getServiceMessageType(elem, item)
+            })
+          })
+        }
+
+        function getTopicMessageTypeSub(item, name) {
+          let messageType = new ROSLIB.Service({
+            ros: ros,
+            name: 'rosapi/topic_type',
+            serviceType: 'rosapi/TopicType'
+          });
+          // console.log(item, index)
+          let request = new ROSLIB.ServiceRequest({
+            topic : item
+          });
+          messageType.callService(request, function (result) {
+            node_array[name]['subscribing'][item] = result.type;
+          })
+
+        }
+
+        function getServiceMessageType(item, name) {
+          let messageType = new ROSLIB.Service({
+            ros: ros,
+            name: 'rosapi/service_type',
+            serviceType: 'rosapi/ServiceType'
+          });
+          // console.log(item, index)
+          let request = new ROSLIB.ServiceRequest({
+            service : item
+          });
+          messageType.callService(request, function (result) {
+            node_array[name]['services'][item] = result.type;
+          })
+
+        }
+
+        function getTopicMessageTypePub(item, name) {
+          let messageType = new ROSLIB.Service({
+            ros: ros,
+            name: 'rosapi/topic_type',
+            serviceType: 'rosapi/TopicType'
+          });
+          let request = new ROSLIB.ServiceRequest({
+            topic : item
+          });
+          messageType.callService(request, function (result) {
+            node_array[name]['publishing'][item] = result.type;
+          })
+        }
+        this.$store.dispatch("UPDATE_NODES", node_array);
+        // await console.log(this.$store.getters.GET_NODES);
+        // await console.log(this.$store.dispatch("UPDATE_NODES", node_array));
+        // callback();
+      },
+      async createTable()
+      {
+        console.log(this.$store.getters.GET_NODES, 'aaaa');
+        let array =  await this.$store.getters.GET_NODES;
+        // await console.log(this.$store.getters.GET_NODES);
+        // await console.log(array, 'kkk');
+        for (let arr in this.$store.getters.GET_NODES)
+        {
+          this.node_name = arr;
+        }
       }
     },
   mounted() {
     this.getData()
   }
 }
-
+// this.getData()
 
 </script>
 

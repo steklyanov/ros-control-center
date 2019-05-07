@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Main from "@/views/Main"
+import MainPage from "@/views/MainPage"
 import SendPresent from "../views/SendPresent";
 import Navigation from "../views/Navigation";
 import VoiceControl from "../views/VoiceControl";
@@ -25,7 +25,7 @@ export default new Router({
     {
       path: '/main',
       name: 'main',
-      component: Main
+      component: MainPage
     },
     {
       path: '/send_present',

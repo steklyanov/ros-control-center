@@ -16,7 +16,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon3">IP-address</span>
                             </div>
-                            <input type="text"  ref="ip_field" id="ip_address" class="form-control" value="ws://10.0.1.7:9090" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="text"  ref="ip_field" id="ip_address" class="form-control" value="localhost" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -38,8 +38,14 @@
         },
         methods: {
           save_settings() {
-            let ip = this.$refs.ip_field.value;
+            let ip_addres = this.$refs.ip_field.value;
+            let str1 = 'ws://';
+            let mid = str1.concat(ip_addres);
+            let str2 = ':9090';
+            let ip = mid.concat(str2);
+            // let ip = this.$refs.ip_field.value;
             this.$store.commit('SET_IP_ADDRESS', ip);
+            this.$store.commit('CHANGE_ROS');
             console.log(ip);
           }
         }
