@@ -6,11 +6,9 @@
         <div class="card-header">
           HEADER
         </div>
-        <div id="list-example" class="list-group" v-for="nodes in this.$store.getters.GET_NODES">
-          <a class="list-group-item list-group-item-action" href="#list-item-1">{{ nodes }}</a>
-          <a class="list-group-item list-group-item-action" href="#list-item-2">Item 2</a>
-          <a class="list-group-item list-group-item-action" href="#list-item-3">Item 3</a>
-          <a class="list-group-item list-group-item-action" href="#list-item-4">Item 4</a>
+<!--        <div id="list-example" class="list-group" v-for="(nodes, array) in this.$store.getters.GET_NODES">-->
+        <div id="list-example" class="list-group" v-for="(nodes, array) in this.node_name">
+          <a class="list-group-item list-group-item-action" href="#list-item-1">{{ array }}</a>
         </div>
       </div>
       <div class="card col-md-9 order-md-2 bg-light">
@@ -142,7 +140,7 @@ export default {
     msg: String
   },
   data: {
-      node_name: null,
+      // node_name: this.$store.getters.GET_NODES,
   },
     methods: {
       goPage(item) {
@@ -247,13 +245,18 @@ export default {
       },
       async createTable()
       {
-        console.log(this.$store.getters.GET_NODES, 'aaaa');
+        // console.log(this.$store.getters.GET_NODES);
         let array =  await this.$store.getters.GET_NODES;
         // await console.log(this.$store.getters.GET_NODES);
-        // await console.log(array, 'kkk');
-        for (let arr in this.$store.getters.GET_NODES)
+        await console.log(array, 'kkk');
+        this.node_name = array;
+        await console.log(this.node_name, 'ttt');
+        for (let arr in array)
         {
-          this.node_name = arr;
+          console.log(arr);
+          for (let topics in arr)
+            console.log(topics);
+          // this.node_name = arr;
         }
       }
     },

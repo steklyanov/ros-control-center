@@ -13,13 +13,15 @@
     import nipplejs from 'nipplejs';
     export default {
         name: "joystic",
+        // data: {
+        //   // twist: null,
+        //   // cmdVel: null
+        // },
         methods: {
           createJoystick() {
             // Check if joystick was aready created
             if (manager == null) {
               joystickContainer = document.getElementById('joystick');
-              // joystck configuration, if you want to adjust joystick, refer to:
-              // https://yoannmoinet.github.io/nipplejs/
               var options = {
                 zone: joystickContainer,
                 position: {left: 50 + '%', top: 105 + 'px'},
@@ -47,7 +49,7 @@
                 // events triggered earlier than 50ms after last publication will be dropped
                 if (publishImmidiately) {
                   publishImmidiately = false;
-                  this.moveAction(lin, ang);
+                  this.moveAction(lin, ang, twist, cmdVel);
                   setTimeout(function () {
                     publishImmidiately = true;
                   }, 50);
@@ -55,11 +57,12 @@
               });
               // event litener for joystick release, always send stop message
               manager.on('end', function () {
-                this.moveAction(0, 0);
+                moveAction(0, 0);
               });
             }
           },
-          moveAction(linear, angular) {
+          moveAction(linear, angular, twist, cmdVel) {
+
             if (linear !== undefined && angular !== undefined) {
               twist.linear.x = linear;
               twist.angular.z = angular;
@@ -67,6 +70,8 @@
               twist.linear.x = 0;
               twist.angular.z = 0;
             }
+            console.log(linear);
+            console.log(twist);
             cmdVel.publish(twist);
           },
           init_var() {
@@ -88,7 +93,7 @@
               }
             });
             // Init topic object
-            var cmdVel = new ROSLIB.Topic({
+            let cmdVel = new ROSLIB.Topic({
               ros: this.$store.getters.GET_ROS,
               name: '/cmd_vel',
               messageType: 'geometry_msgs/Twist'
@@ -108,7 +113,7 @@
               };
               manager = nipplejs.create(options);
               // event listener for joystick move
-              manager.on('move', function (evt, nipple) {
+              manager.on('move', (evt, nipple) => {
                 // nipplejs returns direction is screen coordiantes
                 // we need to rotate it, that dragging towards screen top will move robot forward
                 var direction = nipple.angle.degree - 90;
@@ -120,34 +125,32 @@
 
                 if (publishImmidiately) {
                   publishImmidiately = false;
-                  moveAction(lin, ang);
+                  this.moveAction(lin, ang, twist, cmdVel);
                   setTimeout(function () {
                     publishImmidiately = true;
                   }, 50);
                 }
+
               });
               // event litener for joystick release, always send stop message
-              manager.on('end', function () {
-                moveAction(0, 0);
+              manager.on('end',  () => {
+                this.moveAction(0, 0, twist, cmdVel);
               });
-            }
-            function moveAction(linear, angular) {
-              if (linear !== undefined && angular !== undefined) {
-                twist.linear.x = linear;
-                twist.angular.z = angular;
-              } else {
-                twist.linear.x = 0;
-                twist.angular.z = 0;
-              }
-              console.log(twist);
-              cmdVel.publish(twist);
             }
             },
         },
         mounted() {
             this.init_var();
-        }
+            // initVelocityPublisher();
+            // createJoystick();
+        },
+      beforeUpdate() {
+          // init_var()
+          // this.createJoystick();
+          // this.initVelocityPublisher();
+      }
     }
+
 </script>
 
 <style scoped>
