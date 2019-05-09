@@ -35,7 +35,7 @@ _On the server side(it can be a robot as well):_
     git clone https://github.com/steklyanov/ros-control-center
     cd ros-control-center
     npm install
-    node indexex.js
+    node index.js
 _On the robot side:_   
 
     run your robot moving, navigation nodes
