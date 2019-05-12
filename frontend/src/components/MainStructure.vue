@@ -7,8 +7,13 @@
           HEADER
         </div>
 <!--        <div id="list-example" class="list-group" v-for="(nodes, array) in this.$store.getters.GET_NODES">-->
-        <div id="list-example" class="list-group" v-for="(key, nodes) in this.node_list">
-          <a class="list-group-item list-group-item-action" href="#list-item-1">{{ nodes }}</a>
+        <div v-if="node_list.length">
+          <div id="list-example" class="list-group" v-for="(key, nodes) in this.node_list">
+            <a class="list-group-item list-group-item-action" href="#list-item-1">{{ key }}</a>
+          </div>
+        </div>
+        <div v-else>
+          loading...
         </div>
       </div>
       <div class="card col-md-9 order-md-2 bg-light">
@@ -141,106 +146,112 @@ export default {
   },
   data: function () {
     return {
-      node_list: {}
+      node_list: []
     }
   },
     methods: {
       goPage(item) {
           this.$router.push({name: item})
       },
-       getData() {
+       async getData() {
         this.$store.dispatch("INIT_ROS");
         let node_array = {};
         let ros = this.$store.getters.GET_ROS;
-          getNodeDetail();
-         async function getNodeDetail() {
-          let detailClient = new ROSLIB.Service({
-            ros,
-            name: 'rosapi/nodes',
-            serviceType: 'rosapi/Nodes'
-          });
-          let request = new ROSLIB.ServiceRequest({});
-           detailClient.callService(request, function (result) {
-            // console.log('in')
-            splitNodes(result);
-          });
+          await getNodeDetail();
+
+          function getNodeDetail() {
+            return new Promise((resolve,rej) => {
+              let detailClient = new ROSLIB.Service({
+                ros,
+                name: 'rosapi/nodes',
+                serviceType: 'rosapi/Nodes'
+              });
+              let request = new ROSLIB.ServiceRequest({});
+              detailClient.callService(request, async function (result) {
+                await splitNodes(result);
+                resolve();
+              });
+            })
+
           // console.log('out')
 
         }
-        function splitNodes(result) {
-          // console.log(result.nodes);
-          result.nodes.forEach(function (item) {
-            getTopicDetail(item);
-          })
+        async function splitNodes(result) {
+          return  Promise.all(result.nodes.map(item => getTopicDetail(item)))
         }
 
         function getTopicDetail(item) {
-          let topicDetail = new ROSLIB.Service({
-            ros: ros,
-            name: 'rosapi/node_details',
-            serviceType: 'rosapi/NodeDetails'
-          });
-          let request = new ROSLIB.ServiceRequest({
-            node : item
-          });
-
-          topicDetail.callService(request, function (result) {
-            node_array[item] = result;
-            result.publishing.forEach(function (elem) {
-              getTopicMessageTypeSub(elem, item)
+          return new Promise(async (resolve,rej) => {
+            let topicDetail = new ROSLIB.Service({
+              ros,
+              name: 'rosapi/node_details',
+              serviceType: 'rosapi/NodeDetails'
             });
-            result.subscribing.forEach(function (elem) {
-              getTopicMessageTypePub(elem, item)
+            let request =  new ROSLIB.ServiceRequest({
+              node : item
             });
-            result.services.forEach(function (elem) {
-              getServiceMessageType(elem, item)
-            })
+            topicDetail.callService(request, async function (result) {
+              node_array[item] = result;
+              const publishing = result.publishing.map(elem =>  getTopicMessageTypeSub(elem, item));
+              const subscribing =  result.subscribing.map(elem => getTopicMessageTypePub(elem, item))
+              const services = result.services.map(elem => getServiceMessageType(elem, item));
+              await Promise.all([...publishing,...subscribing,...services]);
+              resolve();
+            });
           })
         }
 
         function getTopicMessageTypeSub(item, name) {
-          let messageType = new ROSLIB.Service({
-            ros: ros,
-            name: 'rosapi/topic_type',
-            serviceType: 'rosapi/TopicType'
-          });
-          // console.log(item, index)
-          let request = new ROSLIB.ServiceRequest({
-            topic : item
-          });
-          messageType.callService(request, function (result) {
-            node_array[name]['subscribing'][item] = result.type;
-          })
 
+            return new Promise((resolve,rej) => {
+              let messageType = new ROSLIB.Service({
+                ros: ros,
+                name: 'rosapi/topic_type',
+                serviceType: 'rosapi/TopicType'
+              });
+              // console.log(item, index)
+              let request = new ROSLIB.ServiceRequest({
+                topic : item
+              });
+              messageType.callService(request, function (result) {
+                node_array[name]['subscribing'][item] = result.type;
+                resolve();
+              })
+            })
         }
 
         function getServiceMessageType(item, name) {
-          let messageType = new ROSLIB.Service({
-            ros: ros,
-            name: 'rosapi/service_type',
-            serviceType: 'rosapi/ServiceType'
-          });
-          // console.log(item, index)
-          let request = new ROSLIB.ServiceRequest({
-            service : item
-          });
-          messageType.callService(request, function (result) {
-            node_array[name]['services'][item] = result.type;
+          return new Promise((resolve,rej) => {
+            let messageType = new ROSLIB.Service({
+              ros: ros,
+              name: 'rosapi/service_type',
+              serviceType: 'rosapi/ServiceType'
+            });
+            let request = new ROSLIB.ServiceRequest({
+              service : item
+            });
+            messageType.callService(request, function (result) {
+              node_array[name]['services'][item] = result.type;
+              resolve();
+            })
           })
 
         }
 
         function getTopicMessageTypePub(item, name) {
-          let messageType = new ROSLIB.Service({
-            ros: ros,
-            name: 'rosapi/topic_type',
-            serviceType: 'rosapi/TopicType'
-          });
-          let request = new ROSLIB.ServiceRequest({
-            topic : item
-          });
-          messageType.callService(request, function (result) {
-            node_array[name]['publishing'][item] = result.type;
+          return new Promise((resolve,rej) => {
+            let messageType = new ROSLIB.Service({
+              ros: ros,
+              name: 'rosapi/topic_type',
+              serviceType: 'rosapi/TopicType'
+            });
+            let request = new ROSLIB.ServiceRequest({
+              topic : item
+            });
+            messageType.callService(request, function (result) {
+              node_array[name]['publishing'][item] = result.type;
+              resolve();
+            })
           })
         }
 
@@ -250,12 +261,11 @@ export default {
         // await console.log(this.$store.dispatch("UPDATE_NODES", node_array));
         // callback();
       },
-      createTable()
-      {
-        console.log(this.$store.getters.GET_NODES);
-        this.node_list =  this.$store.getters.GET_NODES;
-        console.log( this.node_list);
+      createTable() {
 
+        this.node_list =  Object.keys(this.$store.getters.GET_NODES);
+        let node_list2 = this.$store.getters.GET_NODES;
+        console.log(node_list2);
         // this.push(function () {
         //
         // })
