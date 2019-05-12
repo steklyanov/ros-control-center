@@ -7,14 +7,14 @@
           HEADER
         </div>
 <!--        <div id="list-example" class="list-group" v-for="(nodes, array) in this.$store.getters.GET_NODES">-->
-        <div id="list-example" class="list-group" v-for="(nodes, array) in this.node_name">
-          <a class="list-group-item list-group-item-action" href="#list-item-1">{{ array }}</a>
+        <div id="list-example" class="list-group" v-for="(key, nodes) in this.node_list">
+          <a class="list-group-item list-group-item-action" href="#list-item-1">{{ nodes }}</a>
         </div>
       </div>
       <div class="card col-md-9 order-md-2 bg-light">
-        <div class="card-header">
-          HEADER
-        </div>
+<!--        <div class="card-header">-->
+<!--          HEADER-->
+<!--        </div>-->
 
         <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
           <!--            MESSAGE 1 TEMPLATE-->
@@ -139,28 +139,33 @@ export default {
   props: {
     msg: String
   },
-  data: {
-      // node_name: this.$store.getters.GET_NODES,
+  data: function () {
+    return {
+      node_list: {}
+    }
   },
     methods: {
       goPage(item) {
           this.$router.push({name: item})
       },
-      getData() {
+       getData() {
         this.$store.dispatch("INIT_ROS");
         let node_array = {};
         let ros = this.$store.getters.GET_ROS;
-        getNodeDetail();
-        function getNodeDetail() {
+          getNodeDetail();
+         async function getNodeDetail() {
           let detailClient = new ROSLIB.Service({
-            ros: ros,
+            ros,
             name: 'rosapi/nodes',
             serviceType: 'rosapi/Nodes'
           });
           let request = new ROSLIB.ServiceRequest({});
-          detailClient.callService(request, function (result) {
+           detailClient.callService(request, function (result) {
+            // console.log('in')
             splitNodes(result);
           });
+          // console.log('out')
+
         }
         function splitNodes(result) {
           // console.log(result.nodes);
@@ -238,24 +243,28 @@ export default {
             node_array[name]['publishing'][item] = result.type;
           })
         }
+
         this.$store.dispatch("UPDATE_NODES", node_array);
+        this.createTable()
         // await console.log(this.$store.getters.GET_NODES);
         // await console.log(this.$store.dispatch("UPDATE_NODES", node_array));
         // callback();
       },
-      async createTable()
+      createTable()
       {
-        // console.log(this.$store.getters.GET_NODES);
-        let array =  await this.$store.getters.GET_NODES;
+        console.log(this.$store.getters.GET_NODES);
+        this.node_list =  this.$store.getters.GET_NODES;
+        console.log( this.node_list);
+
+        // this.push(function () {
+        //
+        // })
         // await console.log(this.$store.getters.GET_NODES);
-        await console.log(array, 'kkk');
-        this.node_name = array;
-        await console.log(this.node_name, 'ttt');
-        for (let arr in array)
-        {
+        // console.log(array,Object.keys(array), 'kkk');
+        for (let arr in this.node_list) {
           console.log(arr);
-          for (let topics in arr)
-            console.log(topics);
+          // for (let topics in arr)
+          //   console.log(topics);
           // this.node_name = arr;
         }
       }

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    const ROSLIB = require('roslib')
+    const ROSLIB = require('roslib');
     import nipplejs from 'nipplejs';
     export default {
         name: "joystic",
@@ -61,17 +61,26 @@
               });
             }
           },
-          moveAction(linear, angular, twist, cmdVel) {
+           moveAction(linear, angular, twist, cmdVel) {
 
             if (linear !== undefined && angular !== undefined) {
-              twist.linear.x = linear;
-              twist.angular.z = angular;
+              twist = {
+                ...twist,
+                linear:{
+                  ...twist.linear,
+                  x:linear,
+                },
+                angular:{
+                  ...twist.angular,
+                  z:linear,
+                }
+              }
+
             } else {
               twist.linear.x = 0;
               twist.angular.z = 0;
             }
-            console.log(linear);
-            console.log(twist);
+            console.log({twist})
             cmdVel.publish(twist);
           },
           init_var() {
@@ -80,6 +89,7 @@
             let publishImmidiately = true;
             // let lid_action = false;
             // Init standard message to operate robot with zero values.
+
             let twist = new ROSLIB.Message({
               linear: {
                 x: 0,
@@ -93,6 +103,7 @@
               }
             });
             // Init topic object
+
             let cmdVel = new ROSLIB.Topic({
               ros: this.$store.getters.GET_ROS,
               name: '/cmd_vel',
@@ -125,6 +136,7 @@
 
                 if (publishImmidiately) {
                   publishImmidiately = false;
+
                   this.moveAction(lin, ang, twist, cmdVel);
                   setTimeout(function () {
                     publishImmidiately = true;

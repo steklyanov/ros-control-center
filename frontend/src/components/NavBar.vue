@@ -38,7 +38,7 @@
         </span>
       </div>
     </nav>
-    <Settings></Settings>
+    <Settings/>
   </div>
 </template>
 
