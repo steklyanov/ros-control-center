@@ -7,8 +7,9 @@
           HEADER
         </div>
 <!--        <div id="list-example" class="list-group" v-for="(nodes, array) in this.$store.getters.GET_NODES">-->
-        <div v-if="node_list.length">
-          <div id="list-example" class="list-group" v-for="(key, nodes) in this.node_list">
+        <div v-if="node_head.length">
+<!--          STABLE RESULT -->
+          <div id="list-example" class="list-group" v-for="key in this.node_head" v-bind:key="key">
             <a class="list-group-item list-group-item-action" href="#list-item-1">{{ key }}</a>
           </div>
         </div>
@@ -22,35 +23,45 @@
 <!--        </div>-->
 
         <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
-          <div v-for="(key, value) in this.node_list" v-bind:key="nodes">
-            <h4> {{ key }} {{ value }}</h4>
-            <div >
+          <div v-for="(list, obj) in this.node_list">
+            <h4> {{ obj }} </h4>
+            <div v-for="(value, name) in list" >
               <h2></h2>
               <div>
-                <!--            MESSAGE 1 TEMPLATE-->
                 <div class="row">
                   <div class=" card col-md-8 mb-4 bg-light">
-                    <div>
-                    </div>
                     <div class="card-header">
-                      <h4 id="list-item-1">{{ list }}</h4>
+                      {{name }}
                     </div>
                     <div>
-                    </div>
-                    <div>
-                      <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" id="robot_address">robot IP address</span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
-                      </div>
-                      <div id="MessageForm">
-                        <label for="MessageForm"> Some topic</label>
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">message</span>
+                      <div v-for="(topic, name) in value">
+                        <div class="card">
+                          <div class="card-header">
+                            {{ topic }}
                           </div>
-                          <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
+                          <div class="card-body">
+                            <form>
+                              {{ name }}
+                              <div class="form-row align-items-center">
+                                <!--                    V-FOR for message inf, float, etc...-->
+                                <div>
+                                  <div class="col-auto">
+                                    <label class="sr-only" for="inlineFormInputGroup">Default</label>
+                                    <div class="input-group mb-2">
+                                      <div class="input-group-prepend">
+                                        <div class="input-group-text">Input value</div>
+                                      </div>
+                                      <input type="text" class="form-control" id="" placeholder="Topic">
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-auto">
+                                  <button type="submit" class="btn btn-primary mb-2">Publish</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -106,7 +117,8 @@ export default {
   },
   data: function () {
     return {
-      node_list: []
+      node_list: [],
+      node_head: {}
     }
   },
     methods: {
@@ -223,14 +235,14 @@ export default {
       },
       createTable() {
 
-        this.node_list =  Object.keys(this.$store.getters.GET_NODES);
-        let node_list2 = this.$store.getters.GET_NODES;
-        console.log(node_list2);
-
-        for (let nodes in node_list2) {
-          // console.log(typeof node_list2[key]);
-          console.log(node_list2[nodes]);
-        }
+        this.node_head =  Object.keys(this.$store.getters.GET_NODES);
+        this.node_list = this.$store.getters.GET_NODES;
+        // console.log(node_list2);
+        //
+        // for (let nodes in node_list2) {
+        //   // console.log(typeof node_list2[key]);
+        //   console.log(node_list2[nodes]);
+        // }
       }
     },
   mounted() {
