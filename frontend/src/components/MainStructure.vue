@@ -22,90 +22,50 @@
 <!--        </div>-->
 
         <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
-          <!--            MESSAGE 1 TEMPLATE-->
-          <div class="row">
-            <div class=" card col-md-8 mb-4 bg-light">
+          <div v-for="(key, value) in this.node_list" v-bind:key="nodes">
+            <h4> {{ key }} {{ value }}</h4>
+            <div >
+              <h2></h2>
               <div>
-              </div>
-              <div class="card-header">
-                <h4 id="list-item-1">Item 1</h4>
-              </div>
-              <div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="robot_address">robot IP address</span>
-                  </div>
-                  <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
-                </div>
-                <div id="MessageForm">
-                  <label for="MessageForm"> Some topic</label>
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="basic-addon1">message</span>
+                <!--            MESSAGE 1 TEMPLATE-->
+                <div class="row">
+                  <div class=" card col-md-8 mb-4 bg-light">
+                    <div>
                     </div>
-                    <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
+                    <div class="card-header">
+                      <h4 id="list-item-1">{{ list }}</h4>
+                    </div>
+                    <div>
+                    </div>
+                    <div>
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="robot_address">robot IP address</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
+                      </div>
+                      <div id="MessageForm">
+                        <label for="MessageForm"> Some topic</label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">message</span>
+                          </div>
+                          <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=" card col-md-4 mb-4 bg-light">
+                    <div>
+                    </div>
+                    <div class="card-header">
+                      Log 1
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class=" card col-md-4 mb-4 bg-light">
-              <div>
-              </div>
-              <div class="card-header">
-                Log 1
-              </div>
-            </div>
-          </div>
-          <!--MESSAGE 2 TEMPLATE-->
-          <div class="row">
-            <div class=" card col-md-8 mb-4 bg-light">
-              <div>
-              </div>
-              <div class="card-header">
-                <h4 id="list-item-2">Item 2</h4>
-              </div>
-            </div>
-            <div class=" card col-md-4 mb-4 bg-light">
-              <div>
-              </div>
-              <div class="card-header">
-                Log 2
-              </div>
-            </div>
-          </div>
-          <!--MESSAGE 3 TEMPLATE-->
-          <div class="row">
-            <div class=" card col-md-8 mb-4 bg-light">
-              <div>
-              </div>
-              <div class="card-header">
-                <h4 id="list-item-3">Item 2</h4>
-              </div>
-            </div>
-            <div class=" card col-md-4 mb-4 bg-light">
-              <div>
-              </div>
-              <div class="card-header">
-                Log 2
-              </div>
-            </div>
-          </div>
-          <!--MESSAGE 4 TEMPLATE-->
-          <div class="row">
-            <div class=" card col-md-8 mb-4 bg-light">
-              <div>
-              </div>
-              <div class="card-header">
-                <h4 id="list-item-4">Item 2</h4>
-              </div>
-            </div>
-            <div class=" card col-md-4 mb-4 bg-light">
-              <div>
-              </div>
-              <div class="card-header">
-                Log 2
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -266,16 +226,10 @@ export default {
         this.node_list =  Object.keys(this.$store.getters.GET_NODES);
         let node_list2 = this.$store.getters.GET_NODES;
         console.log(node_list2);
-        // this.push(function () {
-        //
-        // })
-        // await console.log(this.$store.getters.GET_NODES);
-        // console.log(array,Object.keys(array), 'kkk');
-        for (let arr in this.node_list) {
-          console.log(arr);
-          // for (let topics in arr)
-          //   console.log(topics);
-          // this.node_name = arr;
+
+        for (let nodes in node_list2) {
+          // console.log(typeof node_list2[key]);
+          console.log(node_list2[nodes]);
         }
       }
     },

@@ -72,7 +72,7 @@
                 },
                 angular:{
                   ...twist.angular,
-                  z:linear,
+                  z:angular,
                 }
               }
 
@@ -80,7 +80,7 @@
               twist.linear.x = 0;
               twist.angular.z = 0;
             }
-            console.log({twist})
+            console.log({twist});
             cmdVel.publish(twist);
           },
           init_var() {
@@ -132,7 +132,7 @@
                   direction = -(450 - nipple.angle.degree);
                 }
                 var lin = Math.cos(direction / 57.29) * nipple.distance * 0.005;
-                var ang = Math.sin(direction / 57.29) * nipple.distance * 0.05;
+                var ang = Math.sin(direction / 57.29) * nipple.distance * 0.0;
 
                 if (publishImmidiately) {
                   publishImmidiately = false;

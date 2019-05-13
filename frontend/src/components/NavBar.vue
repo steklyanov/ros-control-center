@@ -28,6 +28,9 @@
             <a class="nav-link" @click="goPage('history')" href="#">History</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" @click="goPage('hand_control')" href="#">Hand control</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter" href="#">Settings</a>
           </li>
         </ul>

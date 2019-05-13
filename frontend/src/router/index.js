@@ -54,7 +54,7 @@ export default new Router({
     },
     {
       path: '/hand_control',
-      name: 'Navigation center',
+      name: 'hand_control',
       component: HandControl
     }
   ]
