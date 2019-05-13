@@ -43,8 +43,11 @@
                             <form>
                               {{ name }}
                               <div class="form-row align-items-center">
+
                                 <!--                    V-FOR for message inf, float, etc...-->
+
                                 <div>
+                                  {{ name.value }}
                                   <div class="col-auto">
                                     <label class="sr-only" for="inlineFormInputGroup">Default</label>
                                     <div class="input-group mb-2">
@@ -234,17 +237,26 @@ export default {
         // callback();
       },
       createTable() {
-
         this.node_head =  Object.keys(this.$store.getters.GET_NODES);
         this.node_list = this.$store.getters.GET_NODES;
-        // console.log(node_list2);
-        //
-        // for (let nodes in node_list2) {
-        //   // console.log(typeof node_list2[key]);
-        //   console.log(node_list2[nodes]);
-        // }
-      }
-    },
+        console.log(this.node_list);
+        let ros = this.$store.getters.GET_ROS;
+        console.log(ros);
+        let messageType = new ROSLIB.Service({
+          ros: ros,
+          name: 'rosapi/message_details',
+          serviceType: 'rosapi/MessageDetails'
+        });
+        let request = "roscpp/GetLoggers";
+        console.log(request);
+        messageType.callService(request, function (result) {
+          console.log("dddd")
+        }, function (error) {
+          console.log(error);
+        });
+        console.log(messageType);
+    }
+  },
   mounted() {
     this.getData()
   }
