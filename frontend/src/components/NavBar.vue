@@ -35,8 +35,9 @@
           </li>
         </ul>
         <span class="navbar-text">
-          <div class="progress" style="width: 80px">
-            <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">60%</div>
+          <div class="progress" style="width: 100px; height: 25px">
+            <div class="progress-bar" role="progressbar" style="width: 60%;"
+                 aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">{{ this.batteryStatus}}</div>
           </div>
         </span>
       </div>
@@ -46,11 +47,20 @@
 </template>
 
 <script>
+    const ROSLIB = require('roslib');
     import Settings from "../components/Settings";
     export default {
       name: "NavBar",
       components: {
         Settings
+      },
+      data: function () {
+        return {
+          batteryStatus: 1.3,
+        }
+      },
+      mounted () {
+        this.set_battery();
       },
       methods: {
           goPage(item) {
@@ -61,6 +71,19 @@
           },
           setActive: function (menuItem) {
             this.activeItem = menuItem // no need for Vue.set()
+          },
+          async set_battery() {
+            let ros = this.$store.getters.GET_ROS;
+            console.log(ros);
+            let batteryTopic = new ROSLIB.Topic({
+              ros,
+              name: '/battery_level',
+              messageType: 'std_msgs/Float32'
+            });
+            batteryTopic.subscribe(message => {
+              console.log(message.data);
+              this.batteryStatus = Math.round(message.data * 1000) / 1000;
+            })
           }
       }
     }

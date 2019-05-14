@@ -112,7 +112,7 @@
 </template>
 
 <script>
-  const ROSLIB = require('roslib');
+const ROSLIB = require('roslib');
 export default {
   name: 'MainStructure',
   props: {
@@ -250,11 +250,10 @@ export default {
         let request = "roscpp/GetLoggers";
         console.log(request);
         messageType.callService(request, function (result) {
-          console.log("dddd")
         }, function (error) {
-          console.log(error);
+          // console.log(error);
         });
-        console.log(messageType);
+        // console.log(messageType);
     }
   },
   mounted() {
