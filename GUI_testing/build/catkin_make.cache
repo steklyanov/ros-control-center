@@ -1,0 +1,2 @@
+backend
+-DCATKIN_DEVEL_PREFIX=/home/max/dev/ROS_dev/GUI_testing/devel -DCMAKE_INSTALL_PREFIX=/home/max/dev/ROS_dev/GUI_testing/install -G Unix Makefiles
