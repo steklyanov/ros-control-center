@@ -239,20 +239,30 @@ export default {
       createTable() {
         this.node_head =  Object.keys(this.$store.getters.GET_NODES);
         this.node_list = this.$store.getters.GET_NODES;
-        console.log(this.node_list);
+        // console.log(this.node_list);
         let ros = this.$store.getters.GET_ROS;
         console.log(ros);
-        let messageType = new ROSLIB.Service({
-          ros: ros,
-          name: 'rosapi/message_details',
-          serviceType: 'rosapi/MessageDetails'
-        });
-        let request = "roscpp/GetLoggers";
-        console.log(request);
-        messageType.callService(request, function (result) {
+
+        ros.getMessageDetails('/battery_level', function (data) {
+          console.log(data, "ssssss");
         }, function (error) {
-          // console.log(error);
-        });
+          console.log(error);
+        })
+
+
+
+
+        // let messageType = new ROSLIB.Service({
+        //   ros: ros,
+        //   name: 'rosapi/message_details',
+        //   serviceType: 'rosapi/MessageDetails'
+        // });
+        // let request = "roscpp/GetLoggers";
+        // console.log(request);
+        // messageType.callService(request, function (result) {
+        // }, function (error) {
+        //   console.log(error);
+        // });
         // console.log(messageType);
     }
   },

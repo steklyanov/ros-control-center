@@ -56,7 +56,7 @@
       },
       data: function () {
         return {
-          batteryStatus: 1.3,
+          batteryStatus: 0,
         }
       },
       mounted () {
@@ -74,7 +74,6 @@
           },
           async set_battery() {
             let ros = this.$store.getters.GET_ROS;
-            console.log(ros);
             let batteryTopic = new ROSLIB.Topic({
               ros,
               name: '/battery_level',

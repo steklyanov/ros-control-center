@@ -2,14 +2,15 @@
   <div>
 
     <Joystic></Joystic>
-    <button v-on:click="this.lidControl" id="lid_control" >LID Contol</button>
-    <button v-on:click="this.startElena" id="elena" >Start Elena</button>
+<!--    <button v-on:click="this.lidControl" id="lid_control" >LID Contol</button>-->
+    <LidControl/>
   </div>
 </template>
 
 <script>
     const ROSLIB = require('roslib');
     import Joystic from '@/components/Joystic.vue'
+    import LidControl from '@/components/LidControl.vue'
     export default {
         name: "HandControl",
       data: function () {
@@ -18,6 +19,7 @@
         }
       },
         components: {
+          LidControl,
           Joystic
         },
       methods: {
@@ -51,18 +53,6 @@
               });
             }
           },
-        startElena() {
-          let listen = new ROSLIB.Topic({
-            ros : this.$store.getters.GET_ROS,
-            name : '/listener',
-            messageType : 'std_msgs/Bool'
-          });
-
-          let msg = new ROSLIB.Message({
-            data: true
-          });
-          listen.publish(msg);
-        }
       }
     }
 </script>
