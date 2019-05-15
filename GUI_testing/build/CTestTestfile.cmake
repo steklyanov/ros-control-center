@@ -1,8 +1,11 @@
 # CMake generated Testfile for 
-# Source directory: /home/max/dev/ROS_dev/GUI_testing/src
-# Build directory: /home/max/dev/ROS_dev/GUI_testing/build
+# Source directory: /home/max/catkin_ws/src
+# Build directory: /home/max/catkin_ws/build
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 subdirs(gtest)
+subdirs(rospy_message_converter)
 subdirs(backend)
+subdirs(tutorial)
+subdirs(sberbot_rviz_plugins)

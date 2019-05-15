@@ -1,0 +1,8 @@
+prefix=/home/max/catkin_ws/devel
+
+Name: sberbot_rviz_plugins
+Description: Description of sberbot_rviz_plugins
+Version: 0.10.3
+Cflags: 
+Libs: -L/home/max/catkin_ws/devel/lib 
+Requires: 

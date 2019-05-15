@@ -1,2 +1,2 @@
-backend
--DCATKIN_DEVEL_PREFIX=/home/max/dev/ROS_dev/GUI_testing/devel -DCMAKE_INSTALL_PREFIX=/home/max/dev/ROS_dev/GUI_testing/install -G Unix Makefiles
+backend:rospy_message_converter:sberbot_rviz_plugins:tutorial
+-DCATKIN_DEVEL_PREFIX=/home/max/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/max/catkin_ws/install -G Unix Makefiles

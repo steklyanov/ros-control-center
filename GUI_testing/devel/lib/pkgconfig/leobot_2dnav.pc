@@ -1,0 +1,8 @@
+prefix=/home/max/catkin_ws/devel
+
+Name: leobot_2dnav
+Description: Description of leobot_2dnav
+Version: 0.0.1
+Cflags: 
+Libs: -L/home/max/catkin_ws/devel/lib 
+Requires: move_base gmapping amcl map_server rviz

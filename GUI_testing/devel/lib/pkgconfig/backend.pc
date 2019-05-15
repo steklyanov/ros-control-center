@@ -1,8 +1,8 @@
-prefix=/home/max/dev/ROS_dev/GUI_testing/devel
+prefix=/home/max/catkin_ws/devel
 
 Name: backend
 Description: Description of backend
 Version: 0.0.0
-Cflags: 
-Libs: -L/home/max/dev/ROS_dev/GUI_testing/devel/lib 
-Requires: 
+Cflags: -I/home/max/catkin_ws/devel/include
+Libs: -L/home/max/catkin_ws/devel/lib 
+Requires: message_runtime
