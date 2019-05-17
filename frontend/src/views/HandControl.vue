@@ -4,11 +4,14 @@
     <Joystic></Joystic>
 <!--    <button v-on:click="this.lidControl" id="lid_control" >LID Contol</button>-->
     <LidControl/>
+    <LidarMap></LidarMap>
   </div>
 </template>
 
 <script>
+    // import LidarMap from "../components/LidarMap";
     const ROSLIB = require('roslib');
+    import LidarMap from '@/components/LidarMap.vue'
     import Joystic from '@/components/Joystic.vue'
     import LidControl from '@/components/LidControl.vue'
     export default {
@@ -19,6 +22,7 @@
         }
       },
         components: {
+          LidarMap,
           LidControl,
           Joystic
         },

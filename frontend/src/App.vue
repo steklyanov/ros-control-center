@@ -6,6 +6,7 @@
 </template>
 
 <script>
+
 const ROSLIB = require('roslib');
 import NavBar from "./components/NavBar";
 export default {
