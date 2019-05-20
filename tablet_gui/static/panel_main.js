@@ -37,3 +37,4 @@ goal.on('result', function (result) {
 });
 
 goal.send();
+
