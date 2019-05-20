@@ -28,52 +28,39 @@
             <a class="nav-link" @click="goPage('history')" href="#">History</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" @click="goPage('hand_control')" href="#">Hand control</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter" href="#">Settings</a>
           </li>
         </ul>
         <span class="navbar-text">
-          <div class="progress" style="width: 80px">
-            <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">60%</div>
+          <div class="progress" style="width: 100px; height: 25px">
+            <div class="progress-bar" role="progressbar" style="width: 60%;"
+                 aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">{{ this.batteryStatus}}</div>
           </div>
         </span>
       </div>
     </nav>
-
-<!--    &lt;!&ndash;MODAL &ndash;&gt;-->
-<!--    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
-<!--      <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--        <div class="modal-content">-->
-<!--          <div class="modal-header">-->
-<!--            <h5 class="modal-title" id="exampleModalCenterTitle">robot IP address</h5>-->
-<!--            <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--              <span aria-hidden="true">&times;</span>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--          <div class="modal-body">-->
-<!--            <div class="input-group mb-3">-->
-<!--              <div class="input-group-prepend">-->
-<!--                <span class="input-group-text" id="basic-addon3">IP-address</span>-->
-<!--              </div>-->
-<!--              <input type="text" id="ip_address" class="form-control" value="10.0.1.7" aria-label="Username" aria-describedby="basic-addon1">-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="modal-footer">-->
-<!--            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-<!--            <button type="button" onclick="change_ip()" data-dismiss="modal" class="btn btn-primary">Save changes</button>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-    <Settings></Settings>
+    <Settings/>
   </div>
 </template>
 
 <script>
+    const ROSLIB = require('roslib');
     import Settings from "../components/Settings";
     export default {
       name: "NavBar",
       components: {
         Settings
+      },
+      data: function () {
+        return {
+          batteryStatus: 0,
+        }
+      },
+      mounted () {
+        this.set_battery();
       },
       methods: {
           goPage(item) {
@@ -84,6 +71,18 @@
           },
           setActive: function (menuItem) {
             this.activeItem = menuItem // no need for Vue.set()
+          },
+          async set_battery() {
+            let ros = this.$store.getters.GET_ROS;
+            let batteryTopic = new ROSLIB.Topic({
+              ros,
+              name: '/battery_level',
+              messageType: 'std_msgs/Float32'
+            });
+            batteryTopic.subscribe(message => {
+              console.log(message.data);
+              this.batteryStatus = Math.round(message.data * 1000) / 1000;
+            })
           }
       }
     }

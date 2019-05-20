@@ -1,0 +1,8 @@
+prefix=/home/max/catkin_ws/devel
+
+Name: leobot_control
+Description: Description of leobot_control
+Version: 0.0.1
+Cflags: 
+Libs: -L/home/max/catkin_ws/devel/lib 
+Requires: joint_state_controller robot_localization ridgeback_control controller_manager teleop_twist_keyboard velocity_controllers effort_controllers

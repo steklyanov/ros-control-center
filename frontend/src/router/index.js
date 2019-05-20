@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Main from "@/views/Main"
+import MainPage from "@/views/MainPage"
 import SendPresent from "../views/SendPresent";
 import Navigation from "../views/Navigation";
 import VoiceControl from "../views/VoiceControl";
 import History from "../views/History";
 import Test from "../views/Test";
-
+import HandControl from "../views/HandControl";
 
 Vue.use(Router)
 
@@ -25,7 +25,7 @@ export default new Router({
     {
       path: '/main',
       name: 'main',
-      component: Main
+      component: MainPage
     },
     {
       path: '/send_present',
@@ -51,6 +51,11 @@ export default new Router({
       path: '/test',
       name: 'Test',
       component: Test
+    },
+    {
+      path: '/hand_control',
+      name: 'hand_control',
+      component: HandControl
     }
   ]
 })

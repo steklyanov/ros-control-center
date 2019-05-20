@@ -1,0 +1,8 @@
+# CMake generated Testfile for 
+# Source directory: /home/max/catkin_ws/src/rospy_message_converter
+# Build directory: /home/max/catkin_ws/build/rospy_message_converter
+# 
+# This file includes the relevant testing commands required for 
+# testing this directory and lists subdirectories to be tested as well.
+add_test(_ctest_rospy_message_converter_nosetests_test.test_json_message_converter.py "/home/max/catkin_ws/build/catkin_generated/env_cached.sh" "/usr/bin/python" "/opt/ros/kinetic/share/catkin/cmake/test/run_tests.py" "/home/max/catkin_ws/build/test_results/rospy_message_converter/nosetests-test.test_json_message_converter.py.xml" "--return-code" "/usr/bin/cmake -E make_directory /home/max/catkin_ws/build/test_results/rospy_message_converter" "/usr/bin/nosetests-2.7 -P --process-timeout=60 /home/max/catkin_ws/src/rospy_message_converter/test/test_json_message_converter.py --with-xunit --xunit-file=/home/max/catkin_ws/build/test_results/rospy_message_converter/nosetests-test.test_json_message_converter.py.xml")
+add_test(_ctest_rospy_message_converter_nosetests_test.test_message_converter.py "/home/max/catkin_ws/build/catkin_generated/env_cached.sh" "/usr/bin/python" "/opt/ros/kinetic/share/catkin/cmake/test/run_tests.py" "/home/max/catkin_ws/build/test_results/rospy_message_converter/nosetests-test.test_message_converter.py.xml" "--return-code" "/usr/bin/cmake -E make_directory /home/max/catkin_ws/build/test_results/rospy_message_converter" "/usr/bin/nosetests-2.7 -P --process-timeout=60 /home/max/catkin_ws/src/rospy_message_converter/test/test_message_converter.py --with-xunit --xunit-file=/home/max/catkin_ws/build/test_results/rospy_message_converter/nosetests-test.test_message_converter.py.xml")

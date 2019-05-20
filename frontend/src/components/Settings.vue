@@ -16,12 +16,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon3">IP-address</span>
                             </div>
-                            <input type="text"  ref="ip_field" id="ip_address" class="form-control" value="10.0.1.7" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="text"  ref="ip_field" id="ip_address" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" v-on:click="save_settings()" data-dismiss="modal" class="btn btn-primary">Save changes</button>
+                        <button type="button"  data-dismiss="modal" v-on:click="save_settings" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -30,14 +30,30 @@
 </template>
 
 <script>
+  const STORAGE_KEY = 'session-store';
+  import Main from '@/services/Main'
     export default {
         name: "Settings",
+      created() {
+          if (JSON.parse(localStorage.getItem(STORAGE_KEY))) {
+            this.$store.commit('SET_IP_ADDRESS', JSON.parse(localStorage.getItem(STORAGE_KEY)));
+            this.$store.commit('CHANGE_ROS');
+          }
+          else {
+            this.save_settings()
+          }
+      },
         methods: {
           save_settings() {
-            let ip = this.$refs.ip_field.value;
-            this.$store.commit('SET_IP_ADDRESS', ip);
-            console.log(ip);
-          }
+              let ip_addres = this.$refs.ip_field.value;
+              let str1 = 'ws://';
+              let mid = str1.concat(ip_addres);
+              let str2 = ':9090';
+              let ip = mid.concat(str2);
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(ip));
+              this.$store.commit('SET_IP_ADDRESS', ip);
+              this.$store.commit('CHANGE_ROS');
+          },
         }
     }
 </script>
