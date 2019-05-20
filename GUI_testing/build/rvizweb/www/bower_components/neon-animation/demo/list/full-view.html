@@ -91,7 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return;
       }
 
-      this.sharedElements = { 'hero': this.$.main };
+      this.sharedElements = { 'hero': this.$.gui_panel };
       this.animationConfig = {
           'entry': [{
             name: 'fade-in-animation',
@@ -107,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             node: this.$.button
           }, {
             name: 'scale-down-animation',
-            node: this.$.main,
+            node: this.$.gui_panel,
             transformOrigin: '50% 50%',
             axis: 'y'
           }]

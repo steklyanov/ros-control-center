@@ -320,7 +320,7 @@ Custom property | Description | Default
        */
       defaultSelected: {
         type: String,
-        value: 'main'
+        value: 'gui_panel.html'
       },
 
       /**
@@ -515,7 +515,7 @@ Custom property | Description | Default
     closeDrawer: function () {
       requestAnimationFrame(function () {
         this.toggleClass('transition-drawer', true, this.$.drawer);
-        this.selected = 'main';
+        this.selected = 'gui_panel.html';
       }.bind(this));
     },
     _onTransitionEnd: function (e) {
@@ -556,10 +556,10 @@ Custom property | Description | Default
       this.$.drawer.style.width = drawerWidth;
     },
     _setMainStyle: function (narrow, rightDrawer, drawerWidth) {
-      this.$.main.style.left = narrow || rightDrawer ? '0' : drawerWidth;
+      this.$.gui_panel.style.left = narrow || rightDrawer ? '0' : drawerWidth;
 
       if (rightDrawer) {
-        this.$.main.style.right = narrow ? '' : drawerWidth;
+        this.$.gui_panel.style.right = narrow ? '' : drawerWidth;
       }
     },
     _computeMediaQuery: function (forceNarrow, responsiveWidth) {
@@ -610,7 +610,7 @@ Custom property | Description | Default
       return this.narrow && !this.disableSwipe;
     },
     _isMainSelected: function () {
-      return this.selected === 'main';
+      return this.selected === 'gui_panel.html';
     },
     _startEdgePeek: function () {
       this.width = this.$.drawer.offsetWidth;
