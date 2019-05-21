@@ -8,6 +8,9 @@ app.use(express.static(__dirname + '/static'));
 app.get('/gui_panel', function(req, res) {
     res.sendFile(path.join(__dirname + '/gui_panel.html'));
 });
+app.get('/robot_panel', function(req, res) {
+    res.sendFile(path.join(__dirname + '/gui_robot.html'));
+});
 
 app.listen(5080,
     () => console.log(`Server start on port 5080 ...`));

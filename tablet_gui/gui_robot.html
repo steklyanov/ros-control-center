@@ -12,8 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="/panel_main.js"></script>
-<!--    <script src="/robot_main.js"></script>-->
+<!--    <script src="/panel_main.js"></script>-->
+    <script src="/robot_main.js"></script>
     <style>
         html,body{
             margin:0;
@@ -28,32 +28,57 @@
             left: 0;
             position: absolute;
         }
-        #start_btn {
+        #pin_btn {
             position: absolute;
-            bottom: 10%;
-            left: 32%;
-            width: 45%;
+            bottom: 12%;
+            left: 84%;
+            width: 10%;
+            height: 15%;
+            outline: 0;
+            color: transparent;
+            background-color: transparent;
+            border-color: transparent
+        }
+        #lid_button {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            outline: 0;
+            color: transparent;
+            background-color: transparent;
+            border-color: transparent
+        }
+        .review {
+            width: 30%;
+            height: 100%;
+            outline: 0;
+            color: transparent;
+            background-color: transparent;
+            border-color: transparent
+        }
+        #review_group {
+            position: absolute;
+            width: 70%;
             height: 20%;
-            /*outline: 0;*/
-            /*color: transparent;*/
-            /*background-color: transparent;*/
-            /*border-color: transparent*/
+            bottom: 40%;
+            left: 16%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
         }
     </style>
 </head>
 <body>
-<!--<div id="wrapper">-->
-<!--    <div id="screen_content">-->
-<!--        <h1>what</h1>-->
-<!--        <button id="button" type="button" class="btn btn-primary btn-lg" style="width: 250px; height: 150px"> Close lid</button>-->
-<!--        <input id="pinpad">-->
-<!--        <button id="pin_confirm"> Enter pin</button>-->
-<!--        <input id="review">-->
-<!--        <button id="review_confirm"> Enter review</button>-->
-<!--    </div>-->
-<!--</div>-->
 <img id="bg" src="StandBy.png">
-<button id="start_btn">Make ORDER</button>
-<!--<button id="lid_button"> Tra lala</button>-->
+<button id="lid_button"> Tra lala</button>
+<button id="pin_btn">Make ORDER</button>
+<div id="review_group">
+    <button id="s1" class="review"></button>
+    <button id="s2" class="review"></button>
+    <button id="s3" class="review"></button>
+    <button id="s4" class="review"></button>
+    <button id="s5" class="review"></button>
+</div>
+
 </body>
 </html>
