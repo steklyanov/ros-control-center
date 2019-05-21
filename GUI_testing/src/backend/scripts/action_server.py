@@ -30,13 +30,11 @@ class ActionServer():
         self.a_server.start()
         # self.get_pin.start()
         self.display_screen("Init")
-        print("hat")
+        print("Load robot")
         self.status = True
         self.current_pincode = ""
-        # self.get_status_info()
 
     def display_screen(self, message):
-        print(message)
         self.change_screen.publish(str(message))
         return
 
@@ -79,52 +77,57 @@ class ActionServer():
     def execute_cb(self, goal):
         feedback = OrderFeedback()
         result = OrderResult()
-        print("Startin action, line 96")
         self.status = False
-        print("Current goal ",goal, "line 98")
         self.current_order = goal
         current_pincode = ""
         rate = rospy.Rate(1)
         for i in range(0, 5):
             if self.a_server.is_preempt_requested():
                 break
-            feedback.status = "Getting order" + str(i)
-            self.a_server.publish_feedback(feedback)
+            if (i == 0):
+                filler = actionlib.SimpleActionClient('place_order_act_server', LidAction)
+                filler.wait_for_server()
+                self.display_screen("CloseLid")
+                feedback.status = "CloseLid"
+                self.a_server.publish_feedback(feedback)
+                goal = LidGoal("Open_lid")
+                filler.send_goal(goal)
+                print("waiting for result from lid server")
+                filler.wait_for_result()
+                status = filler.get_result()
+            # feedback.status = "Getting order" + str(i)
+            # self.a_server.publish_feedback(feedback)
             if (i == 1):
-                self.display_screen("Start delivery")
-                feedback.status = "Start delivery" + str(i)
+                self.display_screen("OrderDelivery")
+                feedback.status = "RideOutNew"
                 self.a_server.publish_feedback(feedback)
-            if (i > 2 and i < 3):
-                self.display_screen("On the way")
-                feedback.status = "Delivering" + str(i)
+            if (i == 2):
+                # self.display_screen("On the way")
+                feedback.status = "PinCodeOpenNew"
                 self.a_server.publish_feedback(feedback)
-            if (i == 4):
-                feedback.status = "Pin page" + str(i)
+                client = actionlib.SimpleActionClient('courier_robot_display_get_pin_code', PinCodeAction)
+                client.wait_for_server()
+                pin_goal = PinCodeGoal(str(self.current_order.pin_code))
+                client.send_goal(pin_goal)
+                print("waiting for pincode")
+                client.wait_for_result(rospy.Duration(150.0))
+                validation = client.get_result()
+                print(type(validation))
+                if validation.result == "true":
+                    self.display_screen("TakeOrder")
+                    self.get_review()
+                    print(validation)
+                else:
+                    print("nope")
+
+            if (i == 3):
+                feedback.status = "GoingHome"
                 self.a_server.publish_feedback(feedback)
-                self.display_screen("Pin page")
+                self.display_screen("GoingHome")
             rate.sleep()
-        print("Creating client")
-        client = actionlib.SimpleActionClient('courier_robot_display_get_pin_code', PinCodeAction)
-        client.wait_for_server()
-        goal = PinCodeGoal("Enter PIN")
-        client.send_goal(goal)
-        print("waiting for result")
-        print("Pincode now:", current_pincode)
-        client.wait_for_result(rospy.Duration(5.0))
-        print("after waiting")
-        current_pincode = client.get_result()
-        print("Result from pincode waiting ", current_pincode, "line 134")
-        if current_pincode:
-            feedback.status = "Open lid"
-            self.a_server.publish_feedback(feedback)
-            self.display_screen("Open lid")
-            result.result = True
-            self.status = True
-            self.display_screen("Review page")
-            self.get_review()
-        self.display_screen("Going home")
-        feedback.status = "Going home"
-        self.a_server.publish_feedback(feedback)
+        #     FINAL
+        self.display_screen("StandBy")
+        result.result = True
         self.a_server.set_succeeded(result)
 
     def pincode_execute_cb(self, goal):
@@ -138,15 +141,13 @@ class ActionServer():
         client = actionlib.SimpleActionClient('courier_robot_display_get_review', ReviewAction)
         client.wait_for_server()
         goal = ReviewActionGoal()
-        goal.goal = "Enter PIN"
+        goal.goal = "Enter_review"
         client.send_goal(goal)
-        print("before waiting")
         timeout = rospy.Duration(30.0)
-        print "timeout: ", timeout
         client.wait_for_result(timeout)
-        print("after waiting")
         review = client.get_result()
-        print "review: ", review
+        if review.result <= 3:
+            self.display_screen("ExtraReview")
 
 if __name__=='__main__':
     rospy.init_node('courier_robot')
