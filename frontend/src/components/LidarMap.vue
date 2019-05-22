@@ -3,14 +3,16 @@
 </template>
 
 <script>
-  import NAV2D from "@/public/nav2d.min"
-  import ROSLIB from "roslib"
+  // import createjs from "@/public/easeljs.js"
+  // import NAV2D from "@/public/nav2d.min"
+  // import ROSLIB from "roslib"
+  // import ROS2D from "@/public/ros2d.js"
     export default {
       name: "LidarMap",
       methods: {
         init_nav() {
           let ros = new ROSLIB.Ros({
-            url : 'ws://localhost:9090'
+            url : 'ws://10.0.1.7:9090'
           });
           let viewer = new ROS2D.Viewer({
             divID : 'nav',
@@ -23,13 +25,27 @@
             viewer : viewer,
             serverName : '/pr2_move_base'
           });
+
         }
       },
       created () {
-        self.init_nav();
+
+          // let ros2dlib = document.createElement('script');
+          // ros2dlib.setAttribute('src',"/public/ros2d.js");
+          // document.head.appendChild(ros2dlib);
+        let create = document.createElement('script');
+        create.setAttribute('src',"/public/easeljs.js");
+        document.head.appendChild(create);
+
       },
+      mounted() {
+        self.init_nav();
+      }
     }
+  // function
+  // init_nav()
 </script>
+
 <style scoped>
 
 </style>
