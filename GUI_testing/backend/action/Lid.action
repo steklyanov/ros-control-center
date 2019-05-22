@@ -1,7 +1,8 @@
 # Goal
-string pin_code
+string goal
 ---
 # Result
 string result
 ---
 # Feedback
+string feedback
