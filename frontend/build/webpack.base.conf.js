@@ -36,6 +36,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      createjs: 'createjs/builds/1.0.0/createjs.js',
     }
   },
   module: {
@@ -50,6 +51,13 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+      },
+      {
+        test: /node_modules[/\\]createjs/,
+        loaders: [
+          'imports-loader?this=>window',
+          'exports-loader?window.createjs'
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -88,5 +96,9 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  externals: {
+    "createjs": "createjs"
+  },
+
 }

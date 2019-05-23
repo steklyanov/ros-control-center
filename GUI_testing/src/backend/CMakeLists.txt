@@ -68,6 +68,7 @@ add_action_files(
    Order.action
    PinCode.action
    Review.action
+   Lid.action
  )
 
 ## Generate added messages and services with any dependencies listed here
