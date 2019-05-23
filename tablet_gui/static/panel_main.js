@@ -37,6 +37,7 @@ window.onload = () => {
     start_button = document.getElementById("start_btn");
     start_button.disabled = false;
     start_button.style.display = 'block';
+
     start_button.addEventListener("click", () => {
         goal.send();
         start_button.disabled = true;
