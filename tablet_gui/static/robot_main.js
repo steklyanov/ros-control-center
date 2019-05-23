@@ -7,7 +7,7 @@ let image;
 let btn_group;
 
 var listener = new ROSLIB.Topic({
-    ros : ros,
+    ros,
     name : '/courier_robot_display_screen',
     messageType : 'std_msgs/String'
 });
@@ -20,7 +20,7 @@ OrderActServer = new ROSLIB.SimpleActionServer({
 
 OrderActServer.on("goal", () =>{
     image.src = "CloseLid.png";
-    lid_button.addEventListener("click", () => OrderActServer.setSucceeded({result: "Close_lid"}), false);
+    lid_button.addEventListener("click", () => OrderActServer.setSucceeded({result: "Close_lid"}));
 });
 
 listener.subscribe(function(message) {
