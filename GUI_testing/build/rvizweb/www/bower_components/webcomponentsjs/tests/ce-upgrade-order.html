@@ -28,7 +28,7 @@
           }
         }
         window.customElements.define('x-foo', XFoo);
-        assert.deepEqual(order, ['import', 'main'], 'elements are upgraded in imports before main document');
+        assert.deepEqual(order, ['import', 'gui_panel.html'], 'elements are upgraded in imports before main document');
       });
     });
   </script>

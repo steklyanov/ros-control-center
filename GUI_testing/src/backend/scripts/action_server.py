@@ -2,7 +2,7 @@
 import rospy
 import actionlib
 from actionlib_msgs.msg import GoalStatusArray
-
+import time
 from backend.msg import *
 
 # from backend.msg import OrderAction, OrderFeedback, OrderResult
@@ -30,13 +30,11 @@ class ActionServer():
         self.a_server.start()
         # self.get_pin.start()
         self.display_screen("Init")
-        print("hat")
+        print("Load robot")
         self.status = True
         self.current_pincode = ""
-        # self.get_status_info()
 
     def display_screen(self, message):
-        print(message)
         self.change_screen.publish(str(message))
         return
 
@@ -79,52 +77,68 @@ class ActionServer():
     def execute_cb(self, goal):
         feedback = OrderFeedback()
         result = OrderResult()
-        print("Startin action, line 96")
         self.status = False
-        print("Current goal ",goal, "line 98")
         self.current_order = goal
-        current_pincode = ""
+        # первая смена состояния на планшете экран с кодом и ожиданием
+        feedback.status = "RideOutNew"
+        self.a_server.publish_feedback(feedback)
+        #  Страница "поступил заказ" на роботе
+        self.display_screen("NewOrder")
         rate = rospy.Rate(1)
         for i in range(0, 5):
             if self.a_server.is_preempt_requested():
                 break
-            feedback.status = "Getting order" + str(i)
-            self.a_server.publish_feedback(feedback)
+            if (i == 0):
+                filler = actionlib.SimpleActionClient('place_order_act_server', LidAction)
+                filler.wait_for_server()
+
+                goal = LidGoal(True)
+
+                filler.send_goal(goal)
+                print("waiting for result from lid server")
+                filler.wait_for_result()
+                status = filler.get_result()
+
             if (i == 1):
-                self.display_screen("Start delivery")
-                feedback.status = "Start delivery" + str(i)
+                #  Вторая смена экрана на роботе "спешу доставить заказ"
+                self.display_screen("OrderDelivery")
+            if (i == 2):
+                # Смена состояний на планшете "заказ доставлен" последний экран
+                self.display_screen("EnterPin")
+                feedback.status = "PinCodeOpenNew"
                 self.a_server.publish_feedback(feedback)
-            if (i > 2 and i < 3):
-                self.display_screen("On the way")
-                feedback.status = "Delivering" + str(i)
+                client = actionlib.SimpleActionClient('courier_robot_display_get_pin_code', PinCodeAction)
+                client.wait_for_server()
+                pin_goal = PinCodeGoal(str(self.current_order.pin_code))
+                # с отправкой goal происходит смена экрана на ввод пинкода
+                client.send_goal(pin_goal)
+                print("waiting for pincode")
+                #  Ждем ответа, но фронте валидация и тд.
+                client.wait_for_result(rospy.Duration(150.0))
+                validation = client.get_result()
+                # print(type(validation))
+                if validation.result == "true":
+                    self.display_screen("TakeOrder")
+                    time.sleep(1)
+                    self.display_screen("PutCard")
+                    time.sleep(1)
+                    filler.send_goal(goal)
+                    print("waiting for result from lid server")
+                    filler.wait_for_result()
+                    status = filler.get_result()
+                    self.get_review()
+                else:
+                    print("nope")
+            if (i == 3):
+                # feedback.status = "GoingHome"
                 self.a_server.publish_feedback(feedback)
-            if (i == 4):
-                feedback.status = "Pin page" + str(i)
-                self.a_server.publish_feedback(feedback)
-                self.display_screen("Pin page")
+                self.display_screen("GoingHome")
             rate.sleep()
-        print("Creating client")
-        client = actionlib.SimpleActionClient('courier_robot_display_get_pin_code', PinCodeAction)
-        client.wait_for_server()
-        goal = PinCodeGoal("Enter PIN")
-        client.send_goal(goal)
-        print("waiting for result")
-        print("Pincode now:", current_pincode)
-        client.wait_for_result(rospy.Duration(5.0))
-        print("after waiting")
-        current_pincode = client.get_result()
-        print("Result from pincode waiting ", current_pincode, "line 134")
-        if current_pincode:
-            feedback.status = "Open lid"
-            self.a_server.publish_feedback(feedback)
-            self.display_screen("Open lid")
-            result.result = True
-            self.status = True
-            self.display_screen("Review page")
-            self.get_review()
-        self.display_screen("Going home")
-        feedback.status = "Going home"
+        #     FINAL
+        self.display_screen("StandBy")
+        feedback.status = "GoingHome"
         self.a_server.publish_feedback(feedback)
+        result.result = True
         self.a_server.set_succeeded(result)
 
     def pincode_execute_cb(self, goal):
@@ -134,19 +148,19 @@ class ActionServer():
         self.get_pin.set_succeeded(result)
 
     def get_review(self):
-        print("Get review start")
+        # при старте клиента меняется экран на роботе, логика второй странички происходит там-же
         client = actionlib.SimpleActionClient('courier_robot_display_get_review', ReviewAction)
         client.wait_for_server()
         goal = ReviewActionGoal()
-        goal.goal = "Enter PIN"
+        goal.goal = "Enter_review"
         client.send_goal(goal)
-        print("before waiting")
         timeout = rospy.Duration(30.0)
-        print "timeout: ", timeout
         client.wait_for_result(timeout)
-        print("after waiting")
         review = client.get_result()
-        print "review: ", review
+
+
+        # if review.result <= 3:
+        #     self.display_screen("ExtraReview")
 
 if __name__=='__main__':
     rospy.init_node('courier_robot')
