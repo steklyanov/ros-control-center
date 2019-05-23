@@ -91,11 +91,14 @@ class ActionServer():
             if (i == 0):
                 filler = actionlib.SimpleActionClient('place_order_act_server', LidAction)
                 filler.wait_for_server()
+
                 goal = LidGoal(True)
+
                 filler.send_goal(goal)
                 print("waiting for result from lid server")
                 filler.wait_for_result()
                 status = filler.get_result()
+
             if (i == 1):
                 #  Вторая смена экрана на роботе "спешу доставить заказ"
                 self.display_screen("OrderDelivery")
@@ -154,6 +157,7 @@ class ActionServer():
         timeout = rospy.Duration(30.0)
         client.wait_for_result(timeout)
         review = client.get_result()
+
 
         # if review.result <= 3:
         #     self.display_screen("ExtraReview")

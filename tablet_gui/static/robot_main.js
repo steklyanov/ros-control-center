@@ -7,7 +7,9 @@ let image;
 let btn_group;
 
 var listener = new ROSLIB.Topic({
+
     ros,
+
     name : '/courier_robot_display_screen',
     messageType : 'std_msgs/String'
 });
