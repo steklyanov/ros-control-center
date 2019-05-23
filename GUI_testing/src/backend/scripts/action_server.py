@@ -2,7 +2,7 @@
 import rospy
 import actionlib
 from actionlib_msgs.msg import GoalStatusArray
-
+import time
 from backend.msg import *
 
 # from backend.msg import OrderAction, OrderFeedback, OrderResult
@@ -79,7 +79,11 @@ class ActionServer():
         result = OrderResult()
         self.status = False
         self.current_order = goal
-        current_pincode = ""
+        # первая смена состояния на планшете экран с кодом и ожиданием
+        feedback.status = "RideOutNew"
+        self.a_server.publish_feedback(feedback)
+        #  Страница "поступил заказ" на роботе
+        self.display_screen("NewOrder")
         rate = rospy.Rate(1)
         for i in range(0, 5):
             if self.a_server.is_preempt_requested():
@@ -87,46 +91,53 @@ class ActionServer():
             if (i == 0):
                 filler = actionlib.SimpleActionClient('place_order_act_server', LidAction)
                 filler.wait_for_server()
-                self.display_screen("CloseLid")
-                feedback.status = "CloseLid"
-                self.a_server.publish_feedback(feedback)
-                goal = LidGoal("Open_lid")
+
+                goal = LidGoal(True)
+
                 filler.send_goal(goal)
                 print("waiting for result from lid server")
                 filler.wait_for_result()
                 status = filler.get_result()
-            # feedback.status = "Getting order" + str(i)
-            # self.a_server.publish_feedback(feedback)
+
             if (i == 1):
+                #  Вторая смена экрана на роботе "спешу доставить заказ"
                 self.display_screen("OrderDelivery")
-                feedback.status = "RideOutNew"
-                self.a_server.publish_feedback(feedback)
             if (i == 2):
-                # self.display_screen("On the way")
+                # Смена состояний на планшете "заказ доставлен" последний экран
+                self.display_screen("EnterPin")
                 feedback.status = "PinCodeOpenNew"
                 self.a_server.publish_feedback(feedback)
                 client = actionlib.SimpleActionClient('courier_robot_display_get_pin_code', PinCodeAction)
                 client.wait_for_server()
                 pin_goal = PinCodeGoal(str(self.current_order.pin_code))
+                # с отправкой goal происходит смена экрана на ввод пинкода
                 client.send_goal(pin_goal)
                 print("waiting for pincode")
+                #  Ждем ответа, но фронте валидация и тд.
                 client.wait_for_result(rospy.Duration(150.0))
                 validation = client.get_result()
-                print(type(validation))
+                # print(type(validation))
                 if validation.result == "true":
                     self.display_screen("TakeOrder")
+                    time.sleep(1)
+                    self.display_screen("PutCard")
+                    time.sleep(1)
+                    filler.send_goal(goal)
+                    print("waiting for result from lid server")
+                    filler.wait_for_result()
+                    status = filler.get_result()
                     self.get_review()
-                    print(validation)
                 else:
                     print("nope")
-
             if (i == 3):
-                feedback.status = "GoingHome"
+                # feedback.status = "GoingHome"
                 self.a_server.publish_feedback(feedback)
                 self.display_screen("GoingHome")
             rate.sleep()
         #     FINAL
         self.display_screen("StandBy")
+        feedback.status = "GoingHome"
+        self.a_server.publish_feedback(feedback)
         result.result = True
         self.a_server.set_succeeded(result)
 
@@ -137,7 +148,7 @@ class ActionServer():
         self.get_pin.set_succeeded(result)
 
     def get_review(self):
-        print("Get review start")
+        # при старте клиента меняется экран на роботе, логика второй странички происходит там-же
         client = actionlib.SimpleActionClient('courier_robot_display_get_review', ReviewAction)
         client.wait_for_server()
         goal = ReviewActionGoal()
@@ -146,8 +157,10 @@ class ActionServer():
         timeout = rospy.Duration(30.0)
         client.wait_for_result(timeout)
         review = client.get_result()
-        if review.result <= 3:
-            self.display_screen("ExtraReview")
+
+
+        # if review.result <= 3:
+        #     self.display_screen("ExtraReview")
 
 if __name__=='__main__':
     rospy.init_node('courier_robot')

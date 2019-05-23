@@ -1,0 +1,5 @@
+int16 order_id
+string pin_code
+---
+bool result
+string error

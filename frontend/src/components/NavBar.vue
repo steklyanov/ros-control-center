@@ -80,7 +80,6 @@
               messageType: 'std_msgs/Float32'
             });
             batteryTopic.subscribe(message => {
-              console.log(message.data);
               this.batteryStatus = Math.round(message.data * 1000) / 1000;
             })
           }
