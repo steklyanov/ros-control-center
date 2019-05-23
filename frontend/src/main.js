@@ -8,8 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'nipplejs/dist/nipplejs'
 // import './public/easeljs.js'
 // const createjs = require( 'createjs')
-let createjs = require("createjs");
-// import createjs from 'createjs';
+// let createjs = require("createjs");
+import createjs from 'createjs';
 // const createjs = createjs;
 // const createjs = require( 'createjs')
 import './public/eventemitter2.min'

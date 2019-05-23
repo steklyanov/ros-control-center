@@ -36,7 +36,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
-      createjs: 'createjs/builds/1.0.0/createjs.js',
+      'createjs': 'createjs/builds/1.0.0/createjs.js',
     }
   },
   module: {

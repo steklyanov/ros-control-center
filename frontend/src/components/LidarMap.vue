@@ -7,7 +7,6 @@
   // import NAV2D from "@/public/nav2d.min"
   // import ROSLIB from "roslib"
   // import ROS2D from "@/public/ros2d.js"
-  let createjs = require("createjs");
     export default {
       name: "LidarMap",
       methods: {
