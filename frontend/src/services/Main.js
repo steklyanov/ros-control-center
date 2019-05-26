@@ -2,9 +2,9 @@ import api from '@/services/api'
 
 export default {
   get () {
-    return api().get('gui_panel.html')
+    return api().get('main')
   },
   post (data) {
-    return api().post('gui_panel.html', data)
+    return api().post('main', data)
   }
 }

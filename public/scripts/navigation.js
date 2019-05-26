@@ -16,5 +16,6 @@ function create_navigation() {
         continuous : true,
         tfClient   : '/tf',
         serverName : '/move_base',
+        withOrientation: true
     });
 }

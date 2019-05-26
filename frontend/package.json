@@ -13,9 +13,6 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
-    "createjs": "^1.0.1",
-    "exports-loader": "^0.7.0",
-    "imports-loader": "^0.8.0",
     "jquery": "^3.4.0",
     "nipplejs": "^0.8.1",
     "popper.js": "^1.15.0",
@@ -64,6 +61,7 @@
     "shelljs": "^0.7.6",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
+    "vue-html-webpack-plugin": "^3.2.2",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",

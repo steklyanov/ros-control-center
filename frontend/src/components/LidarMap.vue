@@ -3,16 +3,19 @@
 </template>
 
 <script>
-  // import createjs from "@/public/easeljs.js"
-  // import NAV2D from "@/public/nav2d.min"
-  // import ROSLIB from "roslib"
+  import ROSLIB from "roslib"
+  // import createjs from "@/public/createjs.js"
+  // console.log(createjs);
   // import ROS2D from "@/public/ros2d.js"
+  import NAV2D from "@/public/nav2d.min"
+
+
     export default {
       name: "LidarMap",
       methods: {
         init_nav() {
           let ros = new ROSLIB.Ros({
-            url : 'ws://10.0.1.7:9090'
+            url : 'ws://localhost:9090'
           });
           let viewer = new ROS2D.Viewer({
             divID : 'nav',
@@ -25,27 +28,27 @@
             viewer : viewer,
             serverName : '/pr2_move_base'
           });
-
         }
       },
-      created () {
+      // created () {
+      // },
+      created() {
+        var scriptTag = document.createElement("script");
+        scriptTag.src = "https://code.createjs.com/1.0.0/easeljs.min.js";
+        scriptTag.id = "easel";
+        document.getElementsByTagName('head')[0].appendChild(scriptTag);
 
-          // let ros2dlib = document.createElement('script');
-          // ros2dlib.setAttribute('src',"/public/ros2d.js");
-          // document.head.appendChild(ros2dlib);
-        let create = document.createElement('script');
-        create.setAttribute('src',"/public/easeljs.js");
-        document.head.appendChild(create);
+        var scriptTag2 = document.createElement("script");
+        scriptTag2.src = "https://static.robotwebtools.org/ros2djs/current/ros2d.js";
+        scriptTag2.id = "ros2d";
+        document.getElementsByTagName('head')[0].appendChild(scriptTag2);
 
-      },
-      mounted() {
         self.init_nav();
       }
     }
-  // function
-  // init_nav()
-</script>
 
+
+</script>
 <style scoped>
 
 </style>

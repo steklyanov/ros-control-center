@@ -24,7 +24,7 @@ export default new Router({
     },
     {
       path: '/main',
-      name: 'gui_panel.html',
+      name: 'main',
       component: MainPage
     },
     {

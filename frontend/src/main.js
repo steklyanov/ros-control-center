@@ -6,16 +6,6 @@ import router from './router'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'nipplejs/dist/nipplejs'
-// import './public/easeljs.js'
-// const createjs = require( 'createjs')
-// let createjs = require("createjs");
-import createjs from 'createjs';
-// const createjs = createjs;
-// const createjs = require( 'createjs')
-import './public/eventemitter2.min'
-import './public/ros2d.js'
-import './public/nav2d.min.js'
-
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import {store} from './store';
