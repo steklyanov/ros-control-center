@@ -102,10 +102,14 @@ NAV2D.Navigator = function(options) {
    * @param pose - the goal pose
    */
   function sendGoal(pose) {
-    // if (_.findWhere)
-    poses.push(pose);
-    console.log(pose);
-    // create a goal
+    let unique = 1;
+    poses.forEach((item) => {
+      if (JSON.stringify(item) === JSON.stringify(pose)) {
+        unique = 0;
+        return;
+      }
+    });
+    if (unique === 1) {poses.push(pose)}
     var goal = new ROSLIB.Goal({
       actionClient : actionClient,
       goalMessage : {
@@ -117,8 +121,9 @@ NAV2D.Navigator = function(options) {
         }
       }
     });
-    goal.send();
-
+    goals.push(goal);
+    // FUCKING IMPORTANT TO UNMUTE THIS LINE
+    // goal.send();
     // create a marker for the goal
     var goalMarker = new ROS2D.NavigationArrow({
       size : 15,
@@ -202,6 +207,12 @@ NAV2D.Navigator = function(options) {
     var mouseDown = false;
     var xDelta = 0;
     var yDelta = 0;
+
+    button.addEventListener("click", () => {
+      console.log("Im here");
+      // poses.forEach( (item) => {sendGoal(item)});
+      goals.forEach((item) => {item.send()})
+    });
 
     var mouseEventHandler = function(event, mouseState) {
 
