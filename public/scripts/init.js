@@ -5,6 +5,7 @@ let twist;
 let ros;
 let cmdVel;
 let ip;
+let imageSwitch;
 let lid_action = Boolean;
 var teleop; // necessary object for checking teleop
 // first init  in InitTeleopKeyboard()
@@ -50,15 +51,15 @@ function init(ip_addres) {
         // fbDiv.innerHTML += "<p>Connection to websocket server closed.</p>";
         togleButton();
     });
+
 }
 
 function load_video() {
     video = document.getElementById('video');
     // Populate video source
-    // video.src = "http://" + ip + ":8080/stream?topic=/camera/color/image_raw&type=mjpeg&quality=80";
-    video.src = "http://" + ip + ":8080/stream?topic=/camera/color/image_raw&bitrate=250000&type=vp8";
-
-
+    video.src = "http://" + ip + ":8080/stream?topic=/debug_image&type=mjpeg&quality=80";
+    // video.src = "http://" + ip + ":8080/stream?topic=/camera/color/image_raw&bitrate=250000&type=vp8";
+    // video.src = "http://" + ip + ":8080/stream?topic=/image&bitrate=250000&type=vp8";
 }
 
 // FUnction to disable buttons in case of losing connection from rosbridge
