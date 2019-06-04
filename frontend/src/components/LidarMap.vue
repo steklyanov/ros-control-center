@@ -24,7 +24,6 @@
         // document.getElementsByTagName('head')[0].appendChild(scriptTag2);
 
         // self.init_nav();
-        console.log("started");
         let ros = new ROSLIB.Ros({
           url : 'ws://localhost:9090'
         });
