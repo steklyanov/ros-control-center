@@ -148,8 +148,6 @@ export default {
               });
             })
 
-          // console.log('out')
-
         }
         async function splitNodes(result) {
           return  Promise.all(result.nodes.map(item => getTopicDetail(item)))
@@ -167,6 +165,7 @@ export default {
             });
             topicDetail.callService(request, async function (result) {
               node_array[item] = result;
+              console.log("aaa");
               const publishing = result.publishing.map(elem =>  getTopicMessageTypeSub(elem, item));
               const subscribing =  result.subscribing.map(elem => getTopicMessageTypePub(elem, item));
               const services = result.services.map(elem => getServiceMessageType(elem, item));
@@ -215,6 +214,8 @@ export default {
 
         function getTopicMessageTypePub(item, name) {
           return new Promise((resolve,rej) => {
+            console.log(item);
+            console.log(name);
             let messageType = new ROSLIB.Service({
               ros: ros,
               name: 'rosapi/topic_type',
@@ -224,12 +225,13 @@ export default {
               topic : item
             });
             messageType.callService(request, function (result) {
+              console.log(result.type);
               node_array[name]['publishing'][item] = result.type;
               resolve();
             })
           })
         }
-
+        console.log('im done');
         this.$store.dispatch("UPDATE_NODES", node_array);
         this.createTable()
         // await console.log(this.$store.getters.GET_NODES);
@@ -244,15 +246,11 @@ export default {
         let ros = this.$store.getters.GET_ROS;
         console.log(ros);
 
-
         ros.getMessageDetails('/battery_level', function (data) {
           console.log(data, "ssssss");
         }, function (error) {
           console.log(error);
         })
-
-
-
 
         // let messageType = new ROSLIB.Service({
         //   ros: ros,
