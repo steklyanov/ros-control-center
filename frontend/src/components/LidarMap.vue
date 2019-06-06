@@ -1,5 +1,5 @@
-<template>
-    <div id="nav"></div>
+<template lang="pug">
+  #nav
 </template>
 
 <script>
@@ -12,32 +12,35 @@
 
     export default {
       name: "LidarMap",
+      data: function () {
+        return {
+          poses: [],
+          goals: [],
+          message: {},
+        }
+      },
       methods: {
-        init_nav() {
+        init_navigation_elements() {
+          let ros = this.$store.getters.GET_ROS;
+          let viewer = new ROS2D.Viewer({
+            divID : 'nav',
+            width : 350,
+            height : 400
+          });
+          let nav = NAV2D.OccupancyGridClientNav({
+            ros,
+            rootObject : viewer.scene,
+            viewer : viewer,
+            serverName : '/pr2_move_base'
+          });
 
+          let button = document.getElementById("put_marker");
+          let saverPose = document.getElementById("save_poses");
         }
       },
       mounted() {
-        // var scriptTag2 = document.createElement("script");
-        // scriptTag2.src = "https://static.robotwebtools.org/ros2djs/current/ros2d.js";
-        // scriptTag2.id = "ros2d";
-        // document.getElementsByTagName('head')[0].appendChild(scriptTag2);
+        this.init_navigation_elements();
 
-        // self.init_nav();
-        let ros = new ROSLIB.Ros({
-          url : 'ws://localhost:9090'
-        });
-        let viewer = new ROS2D.Viewer({
-          divID : 'nav',
-          width : 350,
-          height : 400
-        });
-        let nav = NAV2D.OccupancyGridClientNav({
-          ros : ros,
-          rootObject : viewer.scene,
-          viewer : viewer,
-          serverName : '/pr2_move_base'
-        });
       }
     }
 </script>

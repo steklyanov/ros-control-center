@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-const ROSLIB = require('roslib');
+import Vue from 'vue'
+import Vuex from 'vuex'
+const ROSLIB = require('roslib')
 
 Vue.use(Vuex);
 
@@ -32,7 +32,7 @@ export const store = new Vuex.Store({
       state.ros = new ROSLIB.Ros({
         // url : "ws://10.0.1.7:9090"
         url: state.ip_address
-      });
+      })
     }
   },
   actions: {
@@ -48,4 +48,4 @@ export const store = new Vuex.Store({
 //       context.commit('SET_IP_ADDRESS', payload);
 // },
 // } https://habr.com/ru/post/421551/
-});
+})

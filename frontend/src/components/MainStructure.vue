@@ -41,7 +41,7 @@
                           </div>
                           <div class="card-body">
                             <form>
-                              {{ name }}
+                              {{ name }} >>>1
                               <div class="form-row align-items-center">
 
                                 <!--                    V-FOR for message inf, float, etc...-->
@@ -168,7 +168,7 @@ export default {
             topicDetail.callService(request, async function (result) {
               node_array[item] = result;
               const publishing = result.publishing.map(elem =>  getTopicMessageTypeSub(elem, item));
-              const subscribing =  result.subscribing.map(elem => getTopicMessageTypePub(elem, item))
+              const subscribing =  result.subscribing.map(elem => getTopicMessageTypePub(elem, item));
               const services = result.services.map(elem => getServiceMessageType(elem, item));
               await Promise.all([...publishing,...subscribing,...services]);
               resolve();
@@ -239,9 +239,11 @@ export default {
       createTable() {
         this.node_head =  Object.keys(this.$store.getters.GET_NODES);
         this.node_list = this.$store.getters.GET_NODES;
+        console.log(this.node_list);
         // console.log(this.node_list);
         let ros = this.$store.getters.GET_ROS;
         console.log(ros);
+
 
         ros.getMessageDetails('/battery_level', function (data) {
           console.log(data, "ssssss");
