@@ -34,14 +34,14 @@
                       {{name }}
                     </div>
                     <div>
-                      <div v-for="(topic, name) in value">
+                      <div v-for="(topic, name2) in value">
                         <div class="card">
                           <div class="card-header">
-                            {{ topic }}
+                            {{ topic }} ??
                           </div>
                           <div class="card-body">
                             <form>
-                              {{ name }} >>>1
+                              {{ name2 }} >>>1
                               <div class="form-row align-items-center">
 
                                 <!--                    V-FOR for message inf, float, etc...-->

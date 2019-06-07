@@ -37,7 +37,7 @@ saverPose.addEventListener("click", () => {
             p,
             p,
             p
-        ],
+        ]
     });
     console.log(request);
     SavePoses.callService(request, function (result) {
