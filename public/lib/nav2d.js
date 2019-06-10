@@ -122,7 +122,7 @@ NAV2D.Navigator = function(options) {
       }
     });
     goals.push(goal);
-    // FUCKING IMPORTANT TO UNMUTE THIS LINE
+    // IMPORTANT TO UNCOMMENT THIS LINE
     // goal.send();
     // create a marker for the goal
     var goalMarker = new ROS2D.NavigationArrow({

@@ -67,7 +67,6 @@ function pose_saver() {
     console.log(p);
 }
 
-
 // SavePoses
 // string path
 // geometry_msgs/PoseArray poses

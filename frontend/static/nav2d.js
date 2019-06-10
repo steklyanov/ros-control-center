@@ -88,6 +88,10 @@ NAV2D.Navigator = function(options) {
   var actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
   var withOrientation = options.withOrientation || false;
   this.rootObject = options.rootObject || new createjs.Container();
+  // MY CODE
+  let poses = [];
+  let button = document.getElementById("put_marker");
+  let goals = [];
 
   // setup the actionlib client
   var actionClient = new ROSLIB.ActionClient({
@@ -122,7 +126,7 @@ NAV2D.Navigator = function(options) {
       }
     });
     goals.push(goal);
-    // FUCKING IMPORTANT TO UNMUTE THIS LINE
+    //IMPORTANT TO UNMUTE THIS LINE
     // goal.send();
     // create a marker for the goal
     var goalMarker = new ROS2D.NavigationArrow({
@@ -209,7 +213,7 @@ NAV2D.Navigator = function(options) {
     var yDelta = 0;
 
     button.addEventListener("click", () => {
-      console.log("Im here");
+      console.log(goals);
       // poses.forEach( (item) => {sendGoal(item)});
       goals.forEach((item) => {item.send()})
     });
@@ -345,6 +349,7 @@ NAV2D.OccupancyGridClientNav = function(options) {
   this.withOrientation = options.withOrientation || false;
 
   this.navigator = null;
+
 
   // setup a client to get the map
   var client = new ROS2D.OccupancyGridClient({
