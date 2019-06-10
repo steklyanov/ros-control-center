@@ -34,14 +34,14 @@
                       {{name }}
                     </div>
                     <div>
-                      <div v-for="(topic, name) in value">
+                      <div v-for="(topic, name2) in value">
                         <div class="card">
                           <div class="card-header">
-                            {{ topic }}
+                            {{ topic }} ??
                           </div>
                           <div class="card-body">
                             <form>
-                              {{ name }}
+                              {{ name2 }} >>>1
                               <div class="form-row align-items-center">
 
                                 <!--                    V-FOR for message inf, float, etc...-->
@@ -148,8 +148,6 @@ export default {
               });
             })
 
-          // console.log('out')
-
         }
         async function splitNodes(result) {
           return  Promise.all(result.nodes.map(item => getTopicDetail(item)))
@@ -167,8 +165,9 @@ export default {
             });
             topicDetail.callService(request, async function (result) {
               node_array[item] = result;
+              console.log("aaa");
               const publishing = result.publishing.map(elem =>  getTopicMessageTypeSub(elem, item));
-              const subscribing =  result.subscribing.map(elem => getTopicMessageTypePub(elem, item))
+              const subscribing =  result.subscribing.map(elem => getTopicMessageTypePub(elem, item));
               const services = result.services.map(elem => getServiceMessageType(elem, item));
               await Promise.all([...publishing,...subscribing,...services]);
               resolve();
@@ -215,6 +214,8 @@ export default {
 
         function getTopicMessageTypePub(item, name) {
           return new Promise((resolve,rej) => {
+            console.log(item);
+            console.log(name);
             let messageType = new ROSLIB.Service({
               ros: ros,
               name: 'rosapi/topic_type',
@@ -224,12 +225,13 @@ export default {
               topic : item
             });
             messageType.callService(request, function (result) {
+              console.log(result.type);
               node_array[name]['publishing'][item] = result.type;
               resolve();
             })
           })
         }
-
+        console.log('im done');
         this.$store.dispatch("UPDATE_NODES", node_array);
         this.createTable()
         // await console.log(this.$store.getters.GET_NODES);
@@ -239,6 +241,7 @@ export default {
       createTable() {
         this.node_head =  Object.keys(this.$store.getters.GET_NODES);
         this.node_list = this.$store.getters.GET_NODES;
+        console.log(this.node_list);
         // console.log(this.node_list);
         let ros = this.$store.getters.GET_ROS;
         console.log(ros);
@@ -248,9 +251,6 @@ export default {
         }, function (error) {
           console.log(error);
         })
-
-
-
 
         // let messageType = new ROSLIB.Service({
         //   ros: ros,

@@ -1,51 +1,117 @@
-<template>
-    <div id="nav"></div>
+<template lang="pug">
+  div
+    #nav
+    button#put_marker.btn.btn-danger(type='button')
+      | MOVE!
+    button#save_poses.btn.btn-danger(type='button')
+      | Call Service save poses
 </template>
 
 <script>
-  // import createjs from "@/public/easeljs.js"
-  // import NAV2D from "@/public/nav2d.min"
-  // import ROSLIB from "roslib"
-  // import ROS2D from "@/public/ros2d.js"
+  import ROSLIB from "roslib"
+
     export default {
       name: "LidarMap",
-      methods: {
-        init_nav() {
-          let ros = new ROSLIB.Ros({
-            url : 'ws://10.0.1.7:9090'
-          });
-          let viewer = new ROS2D.Viewer({
-            divID : 'nav',
-            width : 350,
-            height : 400
-          });
-          let nav = NAV2D.OccupancyGridClientNav({
-            ros : ros,
-            rootObject : viewer.scene,
-            viewer : viewer,
-            serverName : '/pr2_move_base'
-          });
-
+      data: function () {
+        return {
+          // poses: [],
+          // goals: [],
+          // message: {},
         }
       },
-      created () {
+      methods: {
+        init_navigation_elements() {
+          let ros = this.$store.getters.GET_ROS;
+          let viewer = new ROS2D.Viewer({
+            divID : 'nav',
+            width : 600,
+            height : 600
+          });
+          let nav = NAV2D.OccupancyGridClientNav({
+            ros,
+            rootObject : viewer.scene,
+            viewer : viewer,
+            serverName : '/move_base',
+            withOrientation: true,
+            continuous : true,
+            tfClient   : '/tf'
+          });
 
-          // let ros2dlib = document.createElement('script');
-          // ros2dlib.setAttribute('src',"/public/ros2d.js");
-          // document.head.appendChild(ros2dlib);
-        let create = document.createElement('script');
-        create.setAttribute('src',"/public/easeljs.js");
-        document.head.appendChild(create);
+          // let poses = [];
+          // let goals = [];
+          // let message = {};
+          // let button = document.getElementById("put_marker");
+          // let saverPose = document.getElementById("save_poses");
+          // saverPose.addEventListener("click", () => {
+          //   message['path'] = '/home/ubuntu/max_test_trash/first';
+          //   message['poses'] = poses;
+          //
+          //   let SavePoses = new ROSLIB.Service({
+          //     ros : ros,
+          //     name : '/save_poses',
+          //     serviceType : 'save_load_server/SavePoses'
+          //   });
+          //   // let request = new ROSLIB.ServiceRequest(message);
+          //   var v1 = new ROSLIB.Vector3({
+          //     x : 1,
+          //     y : 2,
+          //     z : 3
+          //   });
+          //
+          //   var q1 = new ROSLIB.Quaternion({
+          //     x : 0.1,
+          //     y : 0.2,
+          //     z : 0.3,
+          //     w : 0.4
+          //   });
+          //   var p = new ROSLIB.Pose({
+          //     position : v1,
+          //     orientation : q1
+          //   });
+          //   console.log(p);
+          //   let request = new ROSLIB.ServiceRequest({
+          //     path: '/home/ubuntu/max_test_trash/first',
+          //     poses: [
+          //       p,
+          //       p,
+          //       p
+          //     ]
+          //   });
+          //   console.log(request);
+          //   SavePoses.callService(request, function (result) {
+          //     console.log(SavePoses);
+          //     console.log(result);
+          //   });
+          //   console.log(SavePoses);
+          // });
 
+          function pose_saver() {
+            var v1 = new ROSLIB.Vector3({
+              x : 1,
+              y : 2,
+              z : 3
+            });
+
+            var q1 = new ROSLIB.Quaternion({
+              x : 0.1,
+              y : 0.2,
+              z : 0.3,
+              w : 0.4
+            });
+            var p = new ROSLIB.Pose({
+              position : v1,
+              orientation : q1
+            });
+            console.log(p);
+          }
+        },
       },
       mounted() {
-        self.init_nav();
+        this.init_navigation_elements();
+
+
       }
     }
-  // function
-  // init_nav()
 </script>
-
 <style scoped>
-
 </style>

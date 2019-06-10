@@ -132,7 +132,7 @@
                   direction = -(450 - nipple.angle.degree);
                 }
                 var lin = Math.cos(direction / 57.29) * nipple.distance * 0.005;
-                var ang = Math.sin(direction / 57.29) * nipple.distance * 0.0;
+                var ang = Math.sin(direction / 57.29) * nipple.distance * 0.05;
 
                 if (publishImmidiately) {
                   publishImmidiately = false;

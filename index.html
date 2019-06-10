@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="https://static.robotwebtools.org/EaselJS/current/easeljs.js"></script>
-    <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
-    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.js"></script>
-    <script src="https://static.robotwebtools.org/ros2djs/current/ros2d.js"></script>
-    <script type="text/javascript" src="http://static.robotwebtools.org/nav2djs/current/nav2d.min.js"></script>
+<!--    <script type="text/javascript" src="underscore.js"></script>-->
+<!--    <script src="public/scripts/pose_saver.js"></script>-->
+    <script src="public/lib/easeljs.js"></script>
+    <script src="public/lib/eventemitter2.min.js"></script>
+    <script src="public/lib/roslib.js"></script>
+    <script src="public/lib/ros2d.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -68,32 +69,41 @@
 
     <button id="PostNodeDetail" onclick="postNodeDetail()" type="button" class="btn btn-danger">Publish Details
     </button>
+    <button id="Poses" onclick="pose_saver()" type="button" class="btn btn-danger">Publish Poses
+    </button>
 
-    <div class="wrapper">
-        <div class="card">
-            <div class="card-header">
-                TOPIC TYPE
-            </div>
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="robot_address">robot IP address</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
-                </div>
-                <div id="MessageForm">
-                    <label for="MessageForm"> Some topic</label>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">message</span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-                <a href="#" class="btn btn-primary">Action</a>
-            </div>
-        </div>
-    </div>
+    <button id="put_marker" onclick=""type="button" class="btn btn-danger">MOVE!
+    </button>
+
+    <button id="save_poses" type="button" class="btn btn-danger">Call Service save poses
+    </button>
+
+
+<!--    <div class="wrapper">-->
+<!--        <div class="card">-->
+<!--            <div class="card-header">-->
+<!--                TOPIC TYPE-->
+<!--            </div>-->
+<!--            <div class="card-body">-->
+<!--                <div class="input-group mb-3">-->
+<!--                    <div class="input-group-prepend">-->
+<!--                        <span class="input-group-text" id="robot_address">robot IP address</span>-->
+<!--                    </div>-->
+<!--                    <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">-->
+<!--                </div>-->
+<!--                <div id="MessageForm">-->
+<!--                    <label for="MessageForm"> Some topic</label>-->
+<!--                    <div class="input-group mb-3">-->
+<!--                        <div class="input-group-prepend">-->
+<!--                            <span class="input-group-text" id="basic-addon1">message</span>-->
+<!--                        </div>-->
+<!--                        <input type="text" class="form-control" placeholder="message" aria-label="Username" aria-describedby="basic-addon1">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <a href="#" class="btn btn-primary">Action</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="nav" id="nav"></div>
 
 <!-- controller part-->
@@ -126,5 +136,7 @@
         </div>
     </div>
 
+<script type="text/javascript" src="public/lib/nav2d.js"></script>
+<script src="public/scripts/pose_saver.js"></script>
 </body>
 </html>

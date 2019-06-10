@@ -6,9 +6,9 @@ import Navigation from "../views/Navigation";
 import VoiceControl from "../views/VoiceControl";
 import History from "../views/History";
 import Test from "../views/Test";
-import HandControl from "../views/HandControl";
+import HandControl from '@/views/HandControl';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
@@ -20,42 +20,43 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
+      // eslint-disable-next-line
+      component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue'),
     },
     {
       path: '/main',
-      name: 'gui_panel.html',
-      component: MainPage
+      name: 'main',
+      component: MainPage,
     },
     {
       path: '/send_present',
       name: 'send_present',
-      component: SendPresent
+      component: SendPresent,
     },
     {
       path: '/navigation',
       name: 'navigation',
-      component: Navigation
+      component: Navigation,
     },
     {
       path: '/voice_control',
       name: 'voice_control',
-      component: VoiceControl
+      component: VoiceControl,
     },
     {
       path: '/history',
       name: 'history',
-      component: History
+      component: History,
     },
     {
       path: '/test',
       name: 'Test',
-      component: Test
+      component: Test,
     },
     {
       path: '/hand_control',
       name: 'hand_control',
-      component: HandControl
-    }
-  ]
-})
+      component: HandControl,
+    },
+  ],
+});

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://static.robotwebtools.org/EaselJS/current/easeljs.js"></script>
+    <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<!--    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.js"></script>-->
+    <script src="frontend/src/public/roslib.js"></script>
+    <script src="https://static.robotwebtools.org/ros2djs/current/ros2d.js"></script>
+
+    <script type="text/javascript" src="http://static.robotwebtools.org/nav2djs/current/nav2d.min.js"></script>
+
+    <title>Title</title>
+
+</head>
+<body>
+<div id="nav"></div>
+<script>
+    let ros = new ROSLIB.Ros({
+        url : 'ws://10.0.1.7:9090'
+    });
+    let viewer = new ROS2D.Viewer({
+        divID : 'nav',
+        width : 350,
+        height : 400
+    });
+    let nav = NAV2D.OccupancyGridClientNav({
+        ros : ros,
+        rootObject : viewer.scene,
+        viewer : viewer,
+        serverName : '/pr2_move_base'
+    });
+</script>
+</body>
+</html>

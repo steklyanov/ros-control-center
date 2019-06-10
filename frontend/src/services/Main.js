@@ -1,10 +1,11 @@
-import api from '@/services/api'
+// eslint-disable-next-line
+import api from '@/services/api';
 
 export default {
-  get () {
-    return api().get('gui_panel.html')
+  get() {
+    return api().get('main');
   },
-  post (data) {
-    return api().post('gui_panel.html', data)
+  post(data) {
+    return api().post('main', data);
   }
-}
+};
