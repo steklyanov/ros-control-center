@@ -1,8 +1,0 @@
-prefix=/home/max/catkin_ws/install
-
-Name: leobot_launch
-Description: Description of leobot_launch
-Version: 0.0.1
-Cflags: 
-Libs: -L/home/max/catkin_ws/install/lib 
-Requires: leobot_gazebo leobot_hardware leobot_description

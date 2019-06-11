@@ -1,8 +1,0 @@
-prefix=/home/max/catkin_ws/install
-
-Name: leobot_gazebo
-Description: Description of leobot_gazebo
-Version: 0.0.1
-Cflags: 
-Libs: -L/home/max/catkin_ws/install/lib 
-Requires: gazebo_ros gazebo_ros_control hector_gazebo_plugins ridgeback_gazebo_plugins leobot_description

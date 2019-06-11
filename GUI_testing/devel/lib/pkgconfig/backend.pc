@@ -1,8 +1,0 @@
-prefix=/home/max/catkin_ws/devel
-
-Name: backend
-Description: Description of backend
-Version: 0.0.0
-Cflags: -I/home/max/catkin_ws/devel/include
-Libs: -L/home/max/catkin_ws/devel/lib 
-Requires: message_runtime

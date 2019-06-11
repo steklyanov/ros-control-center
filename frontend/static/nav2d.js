@@ -88,10 +88,7 @@ NAV2D.Navigator = function(options) {
   var actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
   var withOrientation = options.withOrientation || false;
   this.rootObject = options.rootObject || new createjs.Container();
-  // MY CODE
-  let poses = [];
-  let button = document.getElementById("put_marker");
-  let goals = [];
+
 
   // setup the actionlib client
   var actionClient = new ROSLIB.ActionClient({
@@ -105,6 +102,24 @@ NAV2D.Navigator = function(options) {
    *
    * @param pose - the goal pose
    */
+
+  // MY CODE
+  let poses = [];
+  let button = document.getElementById("put_marker");
+  let saverPose = document.getElementById("show_poses");
+  let goals = [];
+
+  saverPose.addEventListener("click", () => {
+    // debugger;
+    console.log("true");
+    console.log(poses);
+  });
+  button.addEventListener("click", () => {
+    console.log(goals);
+    // poses.forEach( (item) => {sendGoal(item)});
+    goals.forEach((item) => {item.send()})
+  });
+
   function sendGoal(pose) {
     let unique = 1;
     poses.forEach((item) => {
@@ -201,7 +216,8 @@ NAV2D.Navigator = function(options) {
       // send the goal
       sendGoal(pose);
     });
-  } else { // withOrientation === true
+  } else {
+    // withOrientation === true
     // setup a click-and-point listener (with orientation)
     var position = null;
     var positionVec3 = null;
@@ -211,12 +227,6 @@ NAV2D.Navigator = function(options) {
     var mouseDown = false;
     var xDelta = 0;
     var yDelta = 0;
-
-    button.addEventListener("click", () => {
-      console.log(goals);
-      // poses.forEach( (item) => {sendGoal(item)});
-      goals.forEach((item) => {item.send()})
-    });
 
     var mouseEventHandler = function(event, mouseState) {
 
@@ -314,6 +324,7 @@ NAV2D.Navigator = function(options) {
     this.rootObject.addEventListener('stagemouseup', function(event) {
       mouseEventHandler(event,'up');
     });
+
   }
 };
 

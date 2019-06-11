@@ -1,8 +1,0 @@
-prefix=/home/max/catkin_ws/install
-
-Name: leobot_web_server
-Description: Description of leobot_web_server
-Version: 0.0.1
-Cflags: 
-Libs: -L/home/max/catkin_ws/install/lib 
-Requires: 
