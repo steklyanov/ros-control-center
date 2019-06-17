@@ -3,7 +3,6 @@ let goals = [];
 let message = {};
 let button = document.getElementById("put_marker");
 let saverPose = document.getElementById("save_poses");
-// saverPose.addEventListener("click", pose_saver());
 saverPose.addEventListener("click", () => {
     event.preventDefault();
     message['path'] = '/home/ubuntu/max_test_trash/first';
@@ -47,3 +46,44 @@ saverPose.addEventListener("click", () => {
     });
     console.log(SavePoses);
 });
+
+function pose_saver() {
+    let message_poses = [];
+    poses.forEach((elem, index) => {
+        console.log(elem);
+        console.log(index);
+    });
+
+    // console.log(poses);
+    // let SavePoses = new ROSLIB.Service({
+    //     ros : ros,
+    //     name : '/courier_file_server',
+    //     serviceType : 'courier_file_server/SavePoses'
+    // });
+    //
+    // var request = new ROSLIB.ServiceRequest(poses);
+
+
+    // var request = new ROSLIB.ServiceRequest({
+//     poses : [
+//         position : {
+//     x : ,
+//     y : ,
+//     z : ,
+// },
+// orientation : {
+//     x : ,
+//     y : ,
+//     z :
+//         }
+//     ]
+//
+// });
+
+    // SavePoses.callService(request, function(result) {
+    //     console.log('Result for service call on '
+    //         + addTwoIntsClient.name
+    //         + ': '
+    //         + result.sum);
+    // });
+}

@@ -80,6 +80,7 @@ NAV2D.ImageMapClientNav = function(options) {
  *   * rootObject (optional) - the root object to add the click listeners to and render robot markers to
  *   * withOrientation (optional) - if the Navigator should consider the robot orientation (default: false)
  */
+
 NAV2D.Navigator = function(options) {
   var that = this;
   options = options || {};
@@ -88,7 +89,7 @@ NAV2D.Navigator = function(options) {
   var actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
   var withOrientation = options.withOrientation || false;
   this.rootObject = options.rootObject || new createjs.Container();
-
+  this.saverPose = document.getElementById("show_poses");
 
   // setup the actionlib client
   var actionClient = new ROSLIB.ActionClient({
@@ -105,20 +106,15 @@ NAV2D.Navigator = function(options) {
 
   // MY CODE
   let poses = [];
-  let button = document.getElementById("put_marker");
-  let saverPose = document.getElementById("show_poses");
+  // let button = document.getElementById("put_marker");
+  // let saverPose = document.getElementById("show_poses");
   let goals = [];
 
-  saverPose.addEventListener("click", () => {
-    // debugger;
-    console.log("true");
-    console.log(poses);
-  });
-  button.addEventListener("click", () => {
-    console.log(goals);
-    // poses.forEach( (item) => {sendGoal(item)});
-    goals.forEach((item) => {item.send()})
-  });
+  // button.addEventListener("click", () => {
+  //   console.log(goals);
+  //   // poses.forEach( (item) => {sendGoal(item)});
+  //   goals.forEach((item) => {item.send()})
+  // });
 
   function sendGoal(pose) {
     let unique = 1;
@@ -228,6 +224,7 @@ NAV2D.Navigator = function(options) {
     var xDelta = 0;
     var yDelta = 0;
 
+
     var mouseEventHandler = function(event, mouseState) {
 
       if (mouseState === 'down'){
@@ -324,7 +321,48 @@ NAV2D.Navigator = function(options) {
     this.rootObject.addEventListener('stagemouseup', function(event) {
       mouseEventHandler(event,'up');
     });
-
+    var save_pose = function () {
+      if (poses.length) {
+        var pose_array = [];
+        console.log("Calling save pose function");
+        // console.log(poses);
+        poses.forEach((elem) => {
+          pose = new ROSLIB.Message({
+            position : {
+              x : elem['position']['x'],
+              y : elem['position']['y'],
+              z : elem['position']['z']
+            },
+            orientation : {
+              x : elem['orientation']['x'],
+              y : elem['orientation']['y'],
+              z : elem['orientation']['z'],
+              w : elem['orientation']['w']
+            }
+          });
+          pose_array.push(pose);
+        });
+        var SavePose = new ROSLIB.Service({
+          ros: ros,
+          name: '/save_poses',
+          serviceType: 'courier_file_server/SavePoses'
+        });
+        let pose_arr = new ROSLIB.Message({
+          poses : pose_array
+        });
+        var request = new ROSLIB.ServiceRequest({
+          path :  '/home/ubuntu/max_test_trash/1',
+          poses : pose_arr
+        });
+        console.log(request);
+        SavePose.callService(request, (result) => {
+          console.log(result);
+        })
+      }
+    };
+    this.saverPose.addEventListener('click', function() {
+      save_pose()
+    });
   }
 };
 

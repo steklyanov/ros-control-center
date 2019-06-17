@@ -33,7 +33,16 @@
             withOrientation: true,
             continuous : true,
             tfClient   : '/tf'
+
+
           });
+
+          // let saverPose = document.getElementById("show_poses");
+          // saverPose.addEventListener("click", () => {
+          //   // debugger;
+          //   console.log("true");
+          //   console.log(NAV2D.Navigator.save_pose()());
+          // });
 
           function pose_saver() {
             var v1 = new ROSLIB.Vector3({
@@ -53,8 +62,6 @@
               orientation : q1
             });
             console.log(p);
-
-
           }
         },
       },
