@@ -109,6 +109,7 @@ NAV2D.Navigator = function(options) {
   // let button = document.getElementById("put_marker");
   // let saverPose = document.getElementById("show_poses");
   let goals = [];
+  let triangles = [];
 
   // button.addEventListener("click", () => {
   //   console.log(goals);
@@ -152,6 +153,7 @@ NAV2D.Navigator = function(options) {
     goalMarker.scaleX = 1.0 / stage.scaleX;
     goalMarker.scaleY = 1.0 / stage.scaleY;
     that.rootObject.addChild(goalMarker);
+    triangles.push(goalMarker);
 
     goal.on('result', function() {
       that.rootObject.removeChild(goalMarker);
@@ -223,7 +225,6 @@ NAV2D.Navigator = function(options) {
     var mouseDown = false;
     var xDelta = 0;
     var yDelta = 0;
-
 
     var mouseEventHandler = function(event, mouseState) {
 
@@ -321,11 +322,10 @@ NAV2D.Navigator = function(options) {
     this.rootObject.addEventListener('stagemouseup', function(event) {
       mouseEventHandler(event,'up');
     });
-    var save_pose = function () {
+
+    this.saverPose.addEventListener('click', () => {
       if (poses.length) {
-        var pose_array = [];
-        console.log("Calling save pose function");
-        // console.log(poses);
+        let pose_array = [];
         poses.forEach((elem) => {
           pose = new ROSLIB.Message({
             position : {
@@ -342,7 +342,7 @@ NAV2D.Navigator = function(options) {
           });
           pose_array.push(pose);
         });
-        var SavePose = new ROSLIB.Service({
+        let SavePose = new ROSLIB.Service({
           ros: ros,
           name: '/save_poses',
           serviceType: 'courier_file_server/SavePoses'
@@ -350,26 +350,29 @@ NAV2D.Navigator = function(options) {
         let pose_arr = new ROSLIB.Message({
           poses : pose_array
         });
+        let path = '/home/ubuntu/max_test_trash/' + document.getElementById("filename").value;
         var request = new ROSLIB.ServiceRequest({
-          path :  '/home/ubuntu/max_test_trash/1',
+          path :  path,
           poses : pose_arr
         });
-        console.log(request);
+        // console.log(request);
+        console.log(triangles, "triangles");
         SavePose.callService(request, (result) => {
-          console.log(result);
+          // console.log(that.rootObject, "before");
+          // console.log(result);
+          triangles.forEach((elem) => {
+            // console.log(elem, "elem");
+            that.rootObject.removeChild(elem);
+          });
+          // console.log(that.rootObject);
         })
       }
-    };
-    this.saverPose.addEventListener('click', function() {
-      save_pose()
     });
   }
 };
-
 /**
  * @author Russell Toris - rctoris@wpi.edu
  */
-
 /**
  * A OccupancyGridClientNav uses an OccupancyGridClient to create a map for use with a Navigator.
  *

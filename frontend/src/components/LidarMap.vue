@@ -1,10 +1,15 @@
-<template lang="pug">
-  div
-    #nav
-    button#put_marker.btn.btn-danger(type='button')
-      | MOVE!
-    button#show_poses.btn.btn-danger(type='button')
-      | Call Service save poses
+<template >
+  <div>
+  <div id="nav"></div>
+  <button id="put_marker" class="btn btn-danger" type="button">MOVE!</button>
+  <button id="show_poses" class="btn btn-danger" type="button">Call Service save poses!</button>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-default">Default</span>
+    </div>
+    <input id="filename" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+  </div>
+  </div>
 </template>
 
 <script>
@@ -36,33 +41,6 @@
 
 
           });
-
-          // let saverPose = document.getElementById("show_poses");
-          // saverPose.addEventListener("click", () => {
-          //   // debugger;
-          //   console.log("true");
-          //   console.log(NAV2D.Navigator.save_pose()());
-          // });
-
-          function pose_saver() {
-            var v1 = new ROSLIB.Vector3({
-              x : 1,
-              y : 2,
-              z : 3
-            });
-
-            var q1 = new ROSLIB.Quaternion({
-              x : 0.1,
-              y : 0.2,
-              z : 0.3,
-              w : 0.4
-            });
-            var p = new ROSLIB.Pose({
-              position : v1,
-              orientation : q1
-            });
-            console.log(p);
-          }
         },
       },
       mounted() {
