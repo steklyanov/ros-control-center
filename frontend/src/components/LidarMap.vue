@@ -1,7 +1,7 @@
 <template >
   <div>
   <div id="nav"></div>
-  <button id="put_marker" class="btn btn-danger" type="button">MOVE!</button>
+  <button id="move_btn" class="btn btn-danger" type="button">MOVE!</button>
   <button id="show_poses" class="btn btn-danger" type="button">Call Service save poses!</button>
   <div class="input-group mb-3">
     <div class="input-group-prepend">
@@ -17,11 +17,11 @@
 
     export default {
       name: "LidarMap",
-      data: function () {
-        return {
-          // poses: [],
-        }
-      },
+      // data: function () {
+      //   return {
+      //     teleop: null,
+      //   }
+      // },
       methods: {
         init_navigation_elements() {
           let ros = this.$store.getters.GET_ROS;
@@ -38,13 +38,25 @@
             withOrientation: true,
             continuous : true,
             tfClient   : '/tf'
-
-
           });
         },
+        initTeleopKeyboard() {
+          let teleop;
+          // Use w, s, a, d keys to drive your robot
+          // Check if keyboard controller was aready created
+          if (this.teleop == null) {
+            console.log("im here");
+            // Initialize the teleop.
+            this.teleop = new KEYBOARDTELEOP.Teleop({
+              ros: this.$store.getters.GET_ROS,
+              topic: '/cmd_vel'
+            });
+          }
+        }
       },
       mounted() {
         this.init_navigation_elements();
+        // this.initTeleopKeyboard();
       }
     }
 </script>

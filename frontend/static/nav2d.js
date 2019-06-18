@@ -90,6 +90,7 @@ NAV2D.Navigator = function(options) {
   var withOrientation = options.withOrientation || false;
   this.rootObject = options.rootObject || new createjs.Container();
   this.saverPose = document.getElementById("show_poses");
+  this.moveBtn = document.getElementById("move_btn");
 
   // setup the actionlib client
   var actionClient = new ROSLIB.ActionClient({
@@ -327,7 +328,7 @@ NAV2D.Navigator = function(options) {
       if (poses.length) {
         let pose_array = [];
         poses.forEach((elem) => {
-          pose = new ROSLIB.Message({
+          const pose = new ROSLIB.Message({
             position : {
               x : elem['position']['x'],
               y : elem['position']['y'],
@@ -351,7 +352,7 @@ NAV2D.Navigator = function(options) {
           poses : pose_array
         });
         let path = '/home/ubuntu/max_test_trash/' + document.getElementById("filename").value;
-        var request = new ROSLIB.ServiceRequest({
+        let request = new ROSLIB.ServiceRequest({
           path :  path,
           poses : pose_arr
         });
@@ -359,7 +360,7 @@ NAV2D.Navigator = function(options) {
         console.log(triangles, "triangles");
         SavePose.callService(request, (result) => {
           // console.log(that.rootObject, "before");
-          // console.log(result);
+          console.log(result);
           triangles.forEach((elem) => {
             // console.log(elem, "elem");
             that.rootObject.removeChild(elem);
@@ -367,6 +368,10 @@ NAV2D.Navigator = function(options) {
           // console.log(that.rootObject);
         })
       }
+    });
+    this.moveBtn.addEventListener("click", () => {
+      console.log("Im here");
+      goals.forEach((item) => {item.send()})
     });
   }
 };
