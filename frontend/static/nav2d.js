@@ -91,6 +91,8 @@ NAV2D.Navigator = function(options) {
   this.rootObject = options.rootObject || new createjs.Container();
   this.saverPose = document.getElementById("show_poses");
   this.moveBtn = document.getElementById("move_btn");
+  this.loaderPose = document.getElementById("load_poses");
+  this.path = '/home/ubuntu/max_test_trash/';
 
   // setup the actionlib client
   var actionClient = new ROSLIB.ActionClient({
@@ -351,9 +353,9 @@ NAV2D.Navigator = function(options) {
         let pose_arr = new ROSLIB.Message({
           poses : pose_array
         });
-        let path = '/home/ubuntu/max_test_trash/' + document.getElementById("filename").value;
+        let final_path = this.path + document.getElementById("filename").value;
         let request = new ROSLIB.ServiceRequest({
-          path :  path,
+          path :  final_path,
           poses : pose_arr
         });
         // console.log(request);
@@ -370,8 +372,25 @@ NAV2D.Navigator = function(options) {
       }
     });
     this.moveBtn.addEventListener("click", () => {
-      console.log("Im here");
       goals.forEach((item) => {item.send()})
+    });
+    this.loaderPose.addEventListener("click", () => {
+       let LoadPose = new ROSLIB.Service({
+         ros,
+         name: '/load_poses',
+         serviceType: 'courier_file_server/LoadPoses'
+       });
+      let final_path = this.path + document.getElementById("filename").value;
+      let request = new ROSLIB.ServiceRequest({
+        path :  final_path,
+      });
+      LoadPose.callService(request, (result)=> {
+        console.log(result);
+        console.log(result['poses']['poses']);
+        result['poses']['poses'].forEach((elem) => {
+          sendGoal(elem);
+        })
+      })
     });
   }
 };

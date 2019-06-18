@@ -9,6 +9,7 @@
     </div>
     <input id="filename" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
   </div>
+    <button id="load_poses" class="btn btn-danger" type="button">Load poses!</button>
   </div>
 </template>
 
