@@ -10,6 +10,7 @@
     <input id="filename" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
   </div>
     <button id="load_poses" class="btn btn-danger" type="button">Load poses!</button>
+    <button id="clear_pose" class="btn btn-danger" type="button">Clear poses!</button>
   </div>
 </template>
 
@@ -32,6 +33,11 @@
             height : 600
           });
           let nav = NAV2D.OccupancyGridClientNav({
+            // saverPose: document.getElementById("show_poses"),
+            // moveBtn: document.getElementById("move_btn"),
+            // loaderPose: document.getElementById("load_poses"),
+            // clearPose: document.getElementById("clear_pose"),
+            // path: '/home/ubuntu/max_test_trash/',
             ros,
             rootObject : viewer.scene,
             viewer : viewer,

@@ -1,49 +1,25 @@
-#### ROS control center
+#### Стек:
+* Основная часть приложения написана на VueJS
+* Для сборки использовался Vue-cli на базе Webpack
+* Для хранения состояний Vuex
 
-_This package provide all necessary functionality to control your
-robot from web browser_
+Список доступных страниц доступен в папке router
+Все изменения состояний описанны в store
+Отображения страниц в папке views
+Основные компоненты содержатся в папке components
 
+#### Components:
 
-Stack:
-* Backend: Node Js, Express 
-* Frontend: Vue Js
-* Database and storage: MongoDB, Vuex
-* Builder: Webpack
- 
-###### Version 2.0 approaching....
+_NavBar_  
+Постраничная навигация
 
-###### In current version you can find following functionality:
-* run robot using keyboard
-* run robot using joystic
-* recieve data from lidar
-* send navigation goal by double tap to the position on the screen
-recieve data from camera
-* list all current topics with subscribing, publishing and services options with nessesary messages types
+_Settings_  
+Изменение IP-адреса, мутация обьекта ROS из хранилища
 
-Following services must be installed:
-* Nodejs
-* npm
-* [web_video_server ][1]
-* [nav2djs][2]
-* [robot_pose_publisher][3]
-* [rosbridge_suite][4]
+_Joystic_  
+Управление роботом посредством джойстика и с клавиатуры
 
-###### How to run:
-
-_On the server side(it can be a robot as well):_
-
-    git clone https://github.com/steklyanov/ros-control-center
-    cd ros-control-center
-    npm install
-    node indexex.js
-_On the robot side:_   
-
-    run your robot moving, navigation nodes
-    roslaunch rosbridge_server rosbridge_websocket.launch
-    rosrun robot_pose_publisher robot_pose_publisher
-    rosrun web_video_server web_video_server
-    
-[1]: https://github.com/RobotWebTools/web_video_server "web_video_server "
-[2]: https://github.com/GT-RAIL/nav2djs "nav2djs"
-[3]: https://github.com/GT-RAIL/robot_pose_publisher "robot_pose_publisher"
-[4]: https://github.com/RobotWebTools/rosbridge_suite "rosbridge_suite"
+_LidarMap_
+* Отображение карты с лидара
+* Сохранение карты
+* Загрузка карты
