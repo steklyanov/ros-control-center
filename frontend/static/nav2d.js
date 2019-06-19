@@ -46,6 +46,7 @@ NAV2D.ImageMapClientNav = function(options) {
     topic : topic,
     image : image
   });
+
   client.on('change', function() {
     that.navigator = new NAV2D.Navigator({
       ros : that.ros,
@@ -54,7 +55,6 @@ NAV2D.ImageMapClientNav = function(options) {
       rootObject : that.rootObject,
       withOrientation : that.withOrientation
     });
-
     // scale the viewer to fit the map
     that.viewer.scaleToDimensions(client.currentImage.width, client.currentImage.height);
     that.viewer.shift(client.currentImage.pose.position.x, client.currentImage.pose.position.y);
@@ -97,12 +97,6 @@ NAV2D.OccupancyGridClientNav = function(options) {
 
   this.navigator = null;
 
-  let saverPose = document.getElementById("show_poses");
-  let moveBtn = document.getElementById("move_btn");
-  let loaderPose = document.getElementById("load_poses");
-  let clearPose = document.getElementById("clear_pose");
-  let path = '/home/ubuntu/max_test_trash/';
-
   // setup a client to get the map
   var client = new ROS2D.OccupancyGridClient({
     ros : this.ros,
@@ -119,7 +113,6 @@ NAV2D.OccupancyGridClientNav = function(options) {
   });
 
   client.on('change', ()=> {
-    console.log("bread");
     that.navigator = new NAV2D.Navigator({
       ros : that.ros,
       serverName : that.serverName,
@@ -162,6 +155,18 @@ NAV2D.Navigator = function(options) {
     var withOrientation = options.withOrientation || false;
     this.rootObject = options.rootObject || new createjs.Container();
 
+    if (this instanceof Navigator) {
+
+    }
+  let saverPose = document.getElementById("show_poses");
+  let moveBtn = document.getElementById("move_btn");
+  let loaderPose = document.getElementById("load_poses");
+  let clearPose = document.getElementById("clear_pose");
+  let path = '/home/ubuntu/max_test_trash/';
+  // let mode = document.getElementById("mode");
+  let mode = document.getElementById("mode");
+
+
   // setup the actionlib client
   var actionClient = new ROSLIB.ActionClient({
     ros : ros,
@@ -182,11 +187,10 @@ NAV2D.Navigator = function(options) {
   let goals = [];
   let triangles = [];
 
-  // button.addEventListener("click", () => {
-  //   console.log(goals);
-  //   // poses.forEach( (item) => {sendGoal(item)});
-  //   goals.forEach((item) => {item.send()})
-  // });
+  let testing = function() {
+    console.log("testing tralala");
+  }
+
 
   function sendGoal(pose) {
     let unique = 1;
@@ -297,6 +301,26 @@ NAV2D.Navigator = function(options) {
     var xDelta = 0;
     var yDelta = 0;
 
+    var putProhibitionPoint = function(event) {
+      var currentPos = stage.globalToRos(event.stageX, event.stageY);
+      var currentPosVec3 = new ROSLIB.Vector3(currentPos);
+
+      var clickedPolygon = false;
+      var selectedPointIndex = null;
+      console.log("polygon");
+      // Create the polygon
+      var polygon = createjs.Graphics.getRGB(100, 100, 255, 1)
+
+
+      var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
+      // polygon.addPoint(pos);
+
+      // Add the polygon to the viewer
+      that.rootObject.addChild(polygon);
+      // Event listeners for mouse interaction with the stage
+
+    }
+
     var mouseEventHandler = function(event, mouseState) {
 
       if (mouseState === 'down'){
@@ -378,12 +402,28 @@ NAV2D.Navigator = function(options) {
           orientation : orientation
         });
         // send the goal
+
         sendGoal(pose);
       }
     };
 
+    // costmap_prohibition_layer/ProhibitionAreas prohibition
+    // bool fill_polygons
+    // geometry_msgs/Polygon[] polygons
+    // geometry_msgs/Point32[] points
+    // float32 x
+    // float32 y
+    // float32 z
+    // ---
+    //   string status
+
     this.rootObject.addEventListener('stagemousedown', function(event) {
-      mouseEventHandler(event,'down');
+      if (mode.checked) {
+        putProhibitionPoint(event);
+      }
+      else {
+        mouseEventHandler(event,'down');
+      }
     });
 
     this.rootObject.addEventListener('stagemousemove', function(event) {
@@ -421,7 +461,7 @@ NAV2D.Navigator = function(options) {
         let pose_arr = new ROSLIB.Message({
           poses : pose_array
         });
-        let final_path = this.path + document.getElementById("filename").value;
+        let final_path = path + document.getElementById("filename").value;
         let request = new ROSLIB.ServiceRequest({
           path :  final_path,
           poses : pose_arr

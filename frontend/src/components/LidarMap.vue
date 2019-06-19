@@ -11,19 +11,72 @@
   </div>
     <button id="load_poses" class="btn btn-danger" type="button">Load poses!</button>
     <button id="clear_pose" class="btn btn-danger" type="button">Clear poses!</button>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="mode">
+      <label class="form-check-label" for="defaultCheck1">
+        Default checkbox
+      </label>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <h3>Draggable 1</h3>
+        <draggable
+          class="dragArea list-group"
+          :list="list1"
+          :group="{ name: 'people', pull: 'clone', put: false }"
+          :clone="cloneDog"
+          @change="log"
+        >
+          <div class="list-group-item" v-for="element in list1" :key="element.id">
+            {{ element.name }}
+          </div>
+        </draggable>
+      </div>
+
+      <div class="col-3">
+        <h3>Draggable 2</h3>
+        <draggable
+          class="dragArea list-group"
+          :list="list2"
+          group="people"
+          @change="log"
+        >
+          <div class="list-group-item" v-for="element in list2" :key="element.id">
+            {{ element.name }}
+          </div>
+        </draggable>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import ROSLIB from "roslib"
+  import draggable from "vuedraggable";
+  let idGlobal = 8;
 
     export default {
       name: "LidarMap",
-      // data: function () {
-      //   return {
-      //     teleop: null,
-      //   }
-      // },
+      data() {
+        return {
+          list1: [
+            { name: "dog 1", id: 1 },
+            { name: "dog 2", id: 2 },
+            { name: "dog 3", id: 3 },
+            { name: "dog 4", id: 4 }
+          ],
+          list2: [
+            { name: "cat 5", id: 5 },
+            { name: "cat 6", id: 6 },
+            { name: "cat 7", id: 7 }
+          ]
+        };
+      },
+      display: "Custom Clone",
+      order: 3,
+      components: {
+        draggable
+      },
       methods: {
         init_navigation_elements() {
           let ros = this.$store.getters.GET_ROS;
@@ -46,24 +99,21 @@
             continuous : true,
             tfClient   : '/tf'
           });
+          // Navigator.testing();
         },
-        initTeleopKeyboard() {
-          let teleop;
-          // Use w, s, a, d keys to drive your robot
-          // Check if keyboard controller was aready created
-          if (this.teleop == null) {
-            console.log("im here");
-            // Initialize the teleop.
-            this.teleop = new KEYBOARDTELEOP.Teleop({
-              ros: this.$store.getters.GET_ROS,
-              topic: '/cmd_vel'
-            });
-          }
+        log: function(evt) {
+          window.console.log(evt);
+        },
+        cloneDog({ id }) {
+          console.log("");
+          return {
+            id: idGlobal++,
+            name: `cat ${id}`
+          };
         }
       },
       mounted() {
         this.init_navigation_elements();
-        // this.initTeleopKeyboard();
       }
     }
 </script>

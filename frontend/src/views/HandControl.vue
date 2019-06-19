@@ -9,7 +9,6 @@
 </template>
 
 <script>
-    // import LidarMap from "../components/LidarMap";
     const ROSLIB = require('roslib');
     import LidarMap from '@/components/LidarMap.vue'
     import Joystic from '@/components/Joystic.vue'
