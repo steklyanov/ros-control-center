@@ -13,7 +13,7 @@
     <button id="clear_pose" class="btn btn-danger" type="button">Clear poses!</button>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" value="" id="mode">
-      <label class="form-check-label" for="defaultCheck1">
+      <label class="form-check-label">
         Default checkbox
       </label>
     </div>
@@ -69,7 +69,9 @@
             { name: "cat 5", id: 5 },
             { name: "cat 6", id: 6 },
             { name: "cat 7", id: 7 }
-          ]
+          ],
+          navigator: Object,
+          // nav: Object
         };
       },
       display: "Custom Clone",
@@ -78,14 +80,16 @@
         draggable
       },
       methods: {
-        init_navigation_elements() {
+        init_navigation_elements: function() {
           let ros = this.$store.getters.GET_ROS;
+          // let navigator = null;
           let viewer = new ROS2D.Viewer({
             divID : 'nav',
             width : 600,
             height : 600
           });
-          let nav = NAV2D.OccupancyGridClientNav({
+          let nav = "qwerty";
+          nav = NAV2D.OccupancyGridClientNav({
             // saverPose: document.getElementById("show_poses"),
             // moveBtn: document.getElementById("move_btn"),
             // loaderPose: document.getElementById("load_poses"),
@@ -93,18 +97,21 @@
             // path: '/home/ubuntu/max_test_trash/',
             ros,
             rootObject : viewer.scene,
-            viewer : viewer,
+            viewer     : viewer,
             serverName : '/move_base',
             withOrientation: true,
             continuous : true,
-            tfClient   : '/tf'
+            tfClient   : '/tf',
+            navigator  : this.navigator
           });
-          // Navigator.testing();
+          console.log(nav);
         },
         log: function(evt) {
           window.console.log(evt);
         },
         cloneDog({ id }) {
+          // console.log(this.navigator);
+          console.log(this.nav, "qwerty");
           console.log("");
           return {
             id: idGlobal++,

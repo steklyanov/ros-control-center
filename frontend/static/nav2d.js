@@ -48,7 +48,7 @@ NAV2D.ImageMapClientNav = function(options) {
   });
 
   client.on('change', function() {
-    that.navigator = new NAV2D.Navigator({
+    that.navigator = NAV2D.Navigator({
       ros : that.ros,
       serverName : that.serverName,
       actionName : that.actionName,
@@ -94,8 +94,7 @@ NAV2D.OccupancyGridClientNav = function(options) {
   this.rootObject = options.rootObject || new createjs.Container();
   this.viewer = options.viewer;
   this.withOrientation = options.withOrientation || false;
-
-  this.navigator = null;
+  this.navigator = options.navigator;
 
   // setup a client to get the map
   var client = new ROS2D.OccupancyGridClient({
@@ -104,23 +103,21 @@ NAV2D.OccupancyGridClientNav = function(options) {
     continuous : continuous,
     topic : topic
   });
-  that.navigator = new NAV2D.Navigator({
-    ros : that.ros,
-    serverName : that.serverName,
-    actionName : that.actionName,
-    rootObject : that.rootObject,
-    withOrientation : that.withOrientation,
+  this.navigator = new NAV2D.Navigator({
+    ros : this.ros,
+    serverName : this.serverName,
+    actionName : this.actionName,
+    rootObject : this.rootObject,
+    withOrientation : this.withOrientation,
   });
 
   client.on('change', ()=> {
-    that.navigator = new NAV2D.Navigator({
-      ros : that.ros,
-      serverName : that.serverName,
-      actionName : that.actionName,
-      rootObject : that.rootObject,
-      withOrientation : that.withOrientation,
-    });
-
+    // console.log(that.navigator.serverName);
+    that.navigator.ros = that.ros;
+    that.navigator.serverName = that.serverName;
+    that.navigator.actionName = that.actionName;
+    that.navigator.rootObject = that.rootObject;
+    that.navigator.withOrientation = that.withOrientation;
     // scale the viewer to fit the map
     that.viewer.scaleToDimensions(client.currentGrid.width, client.currentGrid.height);
     that.viewer.shift(client.currentGrid.pose.position.x, client.currentGrid.pose.position.y);
@@ -150,28 +147,28 @@ NAV2D.Navigator = function(options) {
     var that = this;
     options = options || {};
     var ros = options.ros;
-    var serverName = options.serverName || '/move_base';
+    this.serverName = options.serverName || '/move_base';
     var actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
     var withOrientation = options.withOrientation || false;
     this.rootObject = options.rootObject || new createjs.Container();
 
-    if (this instanceof Navigator) {
-
+    if (this instanceof NAV2D.Navigator) {
+      this.saverPose = document.getElementById("show_poses");
+      this.moveBtn = document.getElementById("move_btn");
+      this.loaderPose = document.getElementById("load_poses");
+      this.clearPose = document.getElementById("clear_pose");
+      this.path = '/home/ubuntu/max_test_trash/';
+      // let mode = document.getElementById("mode");
+      this.mode = document.getElementById("mode");
     }
-  let saverPose = document.getElementById("show_poses");
-  let moveBtn = document.getElementById("move_btn");
-  let loaderPose = document.getElementById("load_poses");
-  let clearPose = document.getElementById("clear_pose");
-  let path = '/home/ubuntu/max_test_trash/';
-  // let mode = document.getElementById("mode");
-  let mode = document.getElementById("mode");
+
 
 
   // setup the actionlib client
   var actionClient = new ROSLIB.ActionClient({
     ros : ros,
     actionName : actionName,
-    serverName : serverName
+    serverName : this.serverName
   });
 
   /**
@@ -186,11 +183,6 @@ NAV2D.Navigator = function(options) {
   // let saverPose = document.getElementById("show_poses");
   let goals = [];
   let triangles = [];
-
-  let testing = function() {
-    console.log("testing tralala");
-  }
-
 
   function sendGoal(pose) {
     let unique = 1;
@@ -434,7 +426,7 @@ NAV2D.Navigator = function(options) {
       mouseEventHandler(event,'up');
     });
 
-    saverPose.addEventListener('click', () => {
+    this.saverPose.addEventListener('click', () => {
       if (poses.length) {
         let pose_array = [];
         poses.forEach((elem) => {
@@ -461,7 +453,7 @@ NAV2D.Navigator = function(options) {
         let pose_arr = new ROSLIB.Message({
           poses : pose_array
         });
-        let final_path = path + document.getElementById("filename").value;
+        let final_path = this.path + document.getElementById("filename").value;
         let request = new ROSLIB.ServiceRequest({
           path :  final_path,
           poses : pose_arr
@@ -479,16 +471,16 @@ NAV2D.Navigator = function(options) {
         })
       }
     });
-    moveBtn.addEventListener("click", () => {
+    this.moveBtn.addEventListener("click", () => {
       goals.forEach((item) => {item.send()})
     });
-    loaderPose.addEventListener("click", () => {
+    this.loaderPose.addEventListener("click", () => {
        let LoadPose = new ROSLIB.Service({
          ros,
          name: '/load_poses',
          serviceType: 'courier_file_server/LoadPoses'
        });
-      let final_path = path + document.getElementById("filename").value;
+      let final_path = this.path + document.getElementById("filename").value;
       let request = new ROSLIB.ServiceRequest({
         path :  final_path,
       });
@@ -500,13 +492,13 @@ NAV2D.Navigator = function(options) {
         })
       })
     });
-    clearPose.addEventListener("click", () => {
+    this.clearPose.addEventListener("click", () => {
       let cleanPose = new ROSLIB.Service({
         ros,
         name: '/clear_poses',
         serviceType: 'courier_file_server/ClearPoses'
       });
-      let final_path = path + document.getElementById("filename").value;
+      let final_path = this.path + document.getElementById("filename").value;
       console.log(final_path);
       let request = new ROSLIB.ServiceRequest({
         path : final_path,
