@@ -84,7 +84,7 @@ NAV2D.ImageMapClientNav = function(options) {
  *   * viewer - the main viewer to render to
  */
 NAV2D.OccupancyGridClientNav = function(options) {
-  var that = this;
+  // var that = this;
   options = options || {};
   this.ros = options.ros;
   var topic = options.topic || '/map';
@@ -96,6 +96,7 @@ NAV2D.OccupancyGridClientNav = function(options) {
   this.withOrientation = options.withOrientation || false;
   this.navigator = options.navigator;
 
+  console.log("Inside OccupancyGrid");
   // setup a client to get the map
   var client = new ROS2D.OccupancyGridClient({
     ros : this.ros,
@@ -112,17 +113,18 @@ NAV2D.OccupancyGridClientNav = function(options) {
   });
 
   client.on('change', ()=> {
-    // console.log(that.navigator.serverName);
-    that.navigator.ros = that.ros;
-    that.navigator.serverName = that.serverName;
-    that.navigator.actionName = that.actionName;
-    that.navigator.rootObject = that.rootObject;
-    that.navigator.withOrientation = that.withOrientation;
+    console.log("here as well");
+    this.navigator.ros = this.ros;
+    this.navigator.serverName = this.serverName;
+    this.navigator.actionName = this.actionName;
+    this.navigator.rootObject = this.rootObject;
+    this.navigator.withOrientation = this.withOrientation;
     // scale the viewer to fit the map
-    that.viewer.scaleToDimensions(client.currentGrid.width, client.currentGrid.height);
-    that.viewer.shift(client.currentGrid.pose.position.x, client.currentGrid.pose.position.y);
+    this.viewer.scaleToDimensions(client.currentGrid.width, client.currentGrid.height);
+    this.viewer.shift(client.currentGrid.pose.position.x, client.currentGrid.pose.position.y);
   });
 };
+
 /**
  * @author Russell Toris - rctoris@wpi.edu
  * @author Lars Kunze - l.kunze@cs.bham.ac.uk
@@ -334,7 +336,7 @@ NAV2D.Navigator = function(options) {
       else if (mouseState === 'move'){
         // remove obsolete orientation marker
         that.rootObject.removeChild(orientationMarker);
-        
+
         if ( mouseDown === true) {
           // if mouse button is held down:
           // - get current mouse position
@@ -352,11 +354,11 @@ NAV2D.Navigator = function(options) {
 
           xDelta =  currentPosVec3.x - positionVec3.x;
           yDelta =  currentPosVec3.y - positionVec3.y;
-          
+
           thetaRadians  = Math.atan2(xDelta,yDelta);
 
           thetaDegrees = thetaRadians * (180.0 / Math.PI);
-          
+
           if (thetaDegrees >= 0 && thetaDegrees <= 180) {
             thetaDegrees += 270;
           } else {
@@ -368,7 +370,7 @@ NAV2D.Navigator = function(options) {
           orientationMarker.rotation = thetaDegrees;
           orientationMarker.scaleX = 1.0 / stage.scaleX;
           orientationMarker.scaleY = 1.0 / stage.scaleY;
-          
+
           that.rootObject.addChild(orientationMarker);
         }
       } else if (mouseDown) { // mouseState === 'up'
@@ -382,23 +384,23 @@ NAV2D.Navigator = function(options) {
         var goalPos = stage.globalToRos(event.stageX, event.stageY);
 
         var goalPosVec3 = new ROSLIB.Vector3(goalPos);
-        
+
         xDelta =  goalPosVec3.x - positionVec3.x;
         yDelta =  goalPosVec3.y - positionVec3.y;
-        
+
         thetaRadians  = Math.atan2(xDelta,yDelta);
-        
+
         if (thetaRadians >= 0 && thetaRadians <= Math.PI) {
           thetaRadians += (3 * Math.PI / 2);
         } else {
           thetaRadians -= (Math.PI/2);
         }
-        
+
         var qz =  Math.sin(-thetaRadians/2.0);
         var qw =  Math.cos(-thetaRadians/2.0);
-        
+
         var orientation = new ROSLIB.Quaternion({x:0, y:0, z:qz, w:qw});
-        
+
         var pose = new ROSLIB.Pose({
           position :    positionVec3,
           orientation : orientation
