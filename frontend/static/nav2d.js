@@ -160,6 +160,7 @@ NAV2D.Navigator = function(options) {
       this.path = '/home/ubuntu/max_test_trash/';
       // let mode = document.getElementById("mode");
       this.mode = document.getElementById("mode");
+
     }
 
 
@@ -170,6 +171,16 @@ NAV2D.Navigator = function(options) {
     actionName : actionName,
     serverName : this.serverName
   });
+  // MY CODE
+  this.poses = [];
+  console.log(this.poses);
+  this.waypoint_array = [];
+  let colors = [[230, 25, 75], [60, 180, 75], [255, 225, 25], [0, 130, 200], [245, 130, 48],
+    [145, 30, 180], [70, 240, 240], [240, 50, 230], [230, 190, 255]];
+  // let button = document.getElementById("put_marker");
+  // let saverPose = document.getElementById("show_poses");
+  let goals = [];
+  let triangles = [];
 
   /**
    * Send a goal to the navigation stack with the given pose.
@@ -177,22 +188,15 @@ NAV2D.Navigator = function(options) {
    * @param pose - the goal pose
    */
 
-  // MY CODE
-  let poses = [];
-  // let button = document.getElementById("put_marker");
-  // let saverPose = document.getElementById("show_poses");
-  let goals = [];
-  let triangles = [];
-
   function sendGoal(pose) {
     let unique = 1;
-    poses.forEach((item) => {
+    that.poses.forEach((item) => {
       if (JSON.stringify(item) === JSON.stringify(pose)) {
         unique = 0;
         return;
       }
     });
-    if (unique === 1) {poses.push(pose)}
+    if (unique === 1) {that.poses.push(pose)}
     var goal = new ROSLIB.Goal({
       actionClient : actionClient,
       goalMessage : {
@@ -205,13 +209,18 @@ NAV2D.Navigator = function(options) {
       }
     });
     goals.push(goal);
+
     //IMPORTANT TO UNMUTE THIS LINE
     // goal.send();
     // create a marker for the goal
+    console.log(goals);
+    console.log(colors[goals.length]);
     var goalMarker = new ROS2D.NavigationArrow({
       size : 15,
       strokeSize : 1,
-      fillColor : createjs.Graphics.getRGB(255, 64, 128, 0.66),
+      // fillColor : createjs.Graphics.getRGB(255, 64, 128, 0.66),
+      fillColor : createjs.Graphics.getRGB(colors[goals.length][0],colors[goals.length][1],
+        colors[goals.length][2], 0.66),
       pulse : true
     });
     goalMarker.x = pose.position.x;
@@ -239,7 +248,8 @@ NAV2D.Navigator = function(options) {
   var robotMarker = new ROS2D.NavigationArrow({
     size : 25,
     strokeSize : 1,
-    fillColor : createjs.Graphics.getRGB(255, 128, 0, 0.66),
+    fillColor : createjs.Graphics.getRGB(colors[goals.length][0],colors[goals.length][1],
+      colors[goals.length][2], 0.8),
     pulse : true
   });
   // wait for a pose to come in first
@@ -301,7 +311,7 @@ NAV2D.Navigator = function(options) {
       var selectedPointIndex = null;
       console.log("polygon");
       // Create the polygon
-      var polygon = createjs.Graphics.getRGB(100, 100, 255, 1)
+      var polygon = createjs.Graphics.getRGB(100, 100, 255, 1);
 
 
       var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
@@ -427,9 +437,11 @@ NAV2D.Navigator = function(options) {
     });
 
     this.saverPose.addEventListener('click', () => {
-      if (poses.length) {
-        let pose_array = [];
-        poses.forEach((elem) => {
+      if (this.poses.length) {
+        this.waypoint_array = [];
+        this.poses.forEach((elem) => {
+          const id = 1;
+          const description = "description";
           const pose = new ROSLIB.Message({
             position : {
               x : elem['position']['x'],
@@ -443,7 +455,12 @@ NAV2D.Navigator = function(options) {
               w : elem['orientation']['w']
             }
           });
-          pose_array.push(pose);
+          const waypoint = new ROSLIB.Message({
+            id : id,
+            description : description,
+            pose : pose
+          });
+          this.waypoint_array.push(waypoint);
         });
         let SavePose = new ROSLIB.Service({
           ros: ros,
@@ -451,12 +468,12 @@ NAV2D.Navigator = function(options) {
           serviceType: 'courier_file_server/SavePoses'
         });
         let pose_arr = new ROSLIB.Message({
-          poses : pose_array
+          waypoints : this.waypoint_array
         });
         let final_path = this.path + document.getElementById("filename").value;
         let request = new ROSLIB.ServiceRequest({
           path :  final_path,
-          poses : pose_arr
+          waypoints : pose_arr
         });
         // console.log(request);
         console.log(triangles, "triangles");
@@ -485,10 +502,9 @@ NAV2D.Navigator = function(options) {
         path :  final_path,
       });
       LoadPose.callService(request, (result)=> {
-        console.log(result);
-        console.log(result['poses']['poses']);
-        result['poses']['poses'].forEach((elem) => {
-          sendGoal(elem);
+        this.waypoint_array = result;
+        result['waypoints']['waypoints'].forEach((elem) => {
+          sendGoal(elem["pose"]);
         })
       })
     });

@@ -71,7 +71,9 @@
             { name: "cat 7", id: 7 }
           ],
           navigator: Object,
-          // nav: Object
+          nav: Object,
+          colors: [[230, 25, 75], [60, 180, 75], [255, 225, 25], [0, 130, 200], [245, 130, 48],
+            [145, 30, 180], [70, 240, 240], [240, 50, 230], [230, 190, 255]]
         };
       },
       display: "Custom Clone",
@@ -80,7 +82,7 @@
         draggable
       },
       methods: {
-        init_navigation_elements: function() {
+        init_navigation_elements() {
           let ros = this.$store.getters.GET_ROS;
           // let navigator = null;
           let viewer = new ROS2D.Viewer({
@@ -88,8 +90,9 @@
             width : 600,
             height : 600
           });
-          let nav = "qwerty";
-          nav = NAV2D.OccupancyGridClientNav({
+          // let nav = "qwerty";
+          // console.log(nav);
+          this.nav = new NAV2D.OccupancyGridClientNav({
             // saverPose: document.getElementById("show_poses"),
             // moveBtn: document.getElementById("move_btn"),
             // loaderPose: document.getElementById("load_poses"),
@@ -104,15 +107,14 @@
             tfClient   : '/tf',
             navigator  : this.navigator
           });
-          console.log(nav);
         },
         log: function(evt) {
           window.console.log(evt);
         },
         cloneDog({ id }) {
           // console.log(this.navigator);
-          console.log(this.nav, "qwerty");
-          console.log("");
+          console.log(this.nav.navigator.rootObject.children, "qwerty");
+          console.log(this.nav.navigator);
           return {
             id: idGlobal++,
             name: `cat ${id}`
