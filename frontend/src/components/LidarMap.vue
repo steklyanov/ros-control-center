@@ -23,9 +23,10 @@
       </form>
     </div>
   <button id="move_btn" class="btn btn-danger" type="button">MOVE!</button>
-  <button id="show_poses" class="btn btn-danger" type="button">Call Service save poses!</button>
+  <button id="save_poses" class="btn btn-danger" type="button">Call Service save poses!</button>
     <button id="load_poses" class="btn btn-danger" type="button">Load poses!</button>
     <button id="clear_pose" class="btn btn-danger" type="button">Clear poses!</button>
+    <button id="save_route" class="btn btn-danger" type="button">Save route!</button>
     <div class="card text-center col-md-8">
       <div class="card-header">
         Poses
@@ -92,14 +93,6 @@
               </div>
             </div>
             <div class="col-auto">
-              <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" id="autoSizingCheck_route">
-                <label class="form-check-label" >
-                  Prohibition mode
-                </label>
-              </div>
-            </div>
-            <div class="col-auto">
               <button type="submit" class="btn btn-primary mb-2">Submit</button>
             </div>
           </div>
@@ -151,7 +144,6 @@
 <script>
   import ROSLIB from "roslib"
   import draggable from "vuedraggable";
-  let idGlobal = 8;
 
     export default {
       name: "LidarMap",
@@ -180,10 +172,11 @@
       },
       methods: {
         init_navigation_elements() {
-          this.saverPose = document.getElementById("show_poses");
+          this.saverPose = document.getElementById("save_poses");
           this.moveBtn = document.getElementById("move_btn");
           this.loaderPose = document.getElementById("load_poses");
           this.clearPose = document.getElementById("clear_pose");
+          this.saverRoute = document.getElementById("save_route");
           this.path = '/home/ubuntu/max_test_trash/';
           this.mode = document.getElementById("mode");
 
@@ -287,6 +280,30 @@
               })
             }
           });
+
+          this.saverRoute.addEventListener('click', () => {
+            let routes = this.route_list.map((pose) => {
+              return pose.id;
+            });
+            let SaveRoute = new ROSLIB.Service({
+              ros,
+              name: '/save_route',
+              serviceType: 'courier_file_server/SaveRoute'
+            });
+            let final_path = this.path + document.getElementById("filename_route").value;
+            const route_msg = new ROSLIB.Message({
+              route : routes
+            });
+            let request = new ROSLIB.ServiceRequest({
+              path :  final_path,
+              route : route_msg
+            });
+            SaveRoute.callService(request, (result)=> {
+              console.log(result);
+              this.clear_map();
+            });
+            // console.log(routes)
+          })
         },
         log: function(evt) {
           window.console.log(evt);
@@ -304,9 +321,9 @@
           console.log(this.poses_list[id]);
           console.log(this.route_list);
           this.route_list.push(this.poses_list[id]);
-          return {
-            id: id,
-          };
+          // return {
+          //   id: id,
+          // };
         }
       },
       mounted() {
