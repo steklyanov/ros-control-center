@@ -43,7 +43,9 @@ _На сервере(робот или своя машина):_
     cd ros-control-center
     npm install
     node index.js
+    
 _На роботе:_   
+
 
     roslaunch rosbridge_server rosbridge_websocket.launch
     rosrun robot_pose_publisher robot_pose_publisher
@@ -55,3 +57,4 @@ _На роботе:_
 [4]: https://github.com/RobotWebTools/rosbridge_suite "rosbridge_suite"
 [5]: https://ru.vuejs.org/v2/guide/installation.html "Vue"
 [6]: https://cli.vuejs.org/ "Vue-Cli"
+
