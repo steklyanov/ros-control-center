@@ -176,29 +176,50 @@
           });
           // let nav = "qwerty";
           // console.log(nav);
-          this.nav = NAV2D.OccupancyGridClientNav({
-            // saverPose: document.getElementById("show_poses"),
-            // moveBtn: document.getElementById("move_btn"),
-            // loaderPose: document.getElementById("load_poses"),
-            // clearPose: document.getElementById("clear_pose"),
-            // path: '/home/ubuntu/max_test_trash/',
+          // this.nav = NAV2D.OccupancyGridClientNav({
+          //   // saverPose: document.getElementById("show_poses"),
+          //   // moveBtn: document.getElementById("move_btn"),
+          //   // loaderPose: document.getElementById("load_poses"),
+          //   // clearPose: document.getElementById("clear_pose"),
+          //   // path: '/home/ubuntu/max_test_trash/',
+          //   ros,
+          //   rootObject : viewer.scene,
+          //   viewer     : viewer,
+          //   serverName : '/move_base',
+          //   withOrientation: true,
+          //   continuous : true,
+          //   tfClient   : '/tf',
+          //   navigator  : this.navigator
+          // });
+          // this.poses_list = this.nav.navigator.rootObject.children.splice(0, 3);
+          var client = new ROS2D.OccupancyGridClient({
             ros,
             rootObject : viewer.scene,
-            viewer     : viewer,
-            serverName : '/move_base',
-            withOrientation: true,
             continuous : true,
-            tfClient   : '/tf',
-            navigator  : this.navigator
+            topic : '/map'
           });
-          this.poses_list = this.nav.navigator.rootObject.children.splice(0, 3);
+          this.navigator = new NAV2D.Navigator({
+            ros,
+            serverName : '/move_base',
+            actionName : 'move_base_msgs/MoveBaseAction',
+            rootObject : viewer.scene,
+            withOrientation : true,
+          });
+          client.on('change', ()=> {
+            console.log("here as well");
+            this.navigator.ros = ros;
+            this.navigator.rootObject = viewer.scene;
+            // scale the viewer to fit the map
+            viewer.scaleToDimensions(client.currentGrid.width, client.currentGrid.height);
+            viewer.shift(client.currentGrid.pose.position.x, client.currentGrid.pose.position.y);
+          });
         },
         log: function(evt) {
           window.console.log(evt);
         },
         cloneDog({ id }) {
-          console.log(this.poses_list);
-          console.log(this.nav.navigator, "qwerty");
+          // console.log(this.poses_list);
+          console.log(this.navigator, "qwerty");
           return {
             id: idGlobal++,
             name: `cat ${id}`
