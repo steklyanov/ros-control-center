@@ -303,22 +303,76 @@ NAV2D.Navigator = function(options) {
     var xDelta = 0;
     var yDelta = 0;
 
+    var clickedPolygon = false;
+    var selectedPointIndex = null;
+    var is_drawing = 0;
+
     var putProhibitionPoint = function(event) {
-      var currentPos = stage.globalToRos(event.stageX, event.stageY);
-      var currentPosVec3 = new ROSLIB.Vector3(currentPos);
+      console.log("im inside prohibition");
+      // Callback functions when there is mouse interaction with the polygon
 
-      var clickedPolygon = false;
-      var selectedPointIndex = null;
-      console.log("polygon");
+
+      var pointCallBack = function(type, event, index) {
+        if (type === 'mousedown') {
+          if (event.nativeEvent.shiftKey === true) {
+            polygon.remPoint(index);
+          }
+          else {
+            selectedPointIndex = index;
+          }
+        }
+        clickedPolygon = true;
+      };
+      var lineCallBack = function(type, event, index) {
+        if (type === 'mousedown') {
+          if (event.nativeEvent.ctrlKey === true) {
+            polygon.splitLine(index);
+          }
+        }
+        clickedPolygon = true;
+      }
+
       // Create the polygon
-      var polygon = createjs.Graphics.getRGB(100, 100, 255, 1);
+      var polygon = new ROS2D.PolygonMarker({
+        lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
+        pointCallBack : pointCallBack,
+        lineCallBack : lineCallBack
+      });
 
-
-      var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
-      // polygon.addPoint(pos);
 
       // Add the polygon to the viewer
       that.rootObject.addChild(polygon);
+      // Event listeners for mouse interaction with the stage
+      that.rootObject.mouseMoveOutside = false; // doesn't seem to work
+      that.rootObject.addEventListener('stagemousemove', function(event) {
+        // Move point when it's dragged
+        if (selectedPointIndex !== null) {
+          var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
+          polygon.movePoint(selectedPointIndex, pos);
+        }
+      });
+
+      that.rootObject.addEventListener('stagemouseup', function(event) {
+        // Add point when not clicked on the polygon
+        if (selectedPointIndex !== null) {
+          selectedPointIndex = null;
+        }
+        else if (that.rootObject.mouseInBounds === true && clickedPolygon === false) {
+          var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
+          polygon.addPoint(pos);
+        }
+        clickedPolygon = false;
+      });
+
+      // Create the polygon
+      // var polygon = createjs.Graphics.getRGB(100, 100, 255, 1);
+
+
+      // var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
+      // polygon.addPoint(pos);
+
+      // Add the polygon to the viewer
+      // that.rootObject.addChild(polygon);
       // Event listeners for mouse interaction with the stage
 
     }
@@ -421,7 +475,10 @@ NAV2D.Navigator = function(options) {
 
     this.rootObject.addEventListener('stagemousedown', function(event) {
       if (mode.checked) {
-        putProhibitionPoint(event);
+        if (is_drawing === 0) {
+          is_drawing = 1;
+          putProhibitionPoint(event);
+        }
       }
       else {
         mouseEventHandler(event,'down');
