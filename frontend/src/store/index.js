@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-const ROSLIB = require('roslib')
+import createPersistedState from 'vuex-persistedstate';
+import Cookies from 'js-cookie';
+const ROSLIB = require('roslib');
 
 Vue.use(Vuex);
 
@@ -8,7 +10,8 @@ export const store = new Vuex.Store({
   state: {
     ip_address: null,
     ros: new ROSLIB.Ros,
-    nodes: {}
+    nodes: {},
+    poses: []
   },
   getters: {
     GET_NODES: state => {
@@ -19,11 +22,17 @@ export const store = new Vuex.Store({
     },
     GET_ROS: state => {
       return state.ros;
+    },
+    GET_POSES: state => {
+      return state.poses;
     }
   },
   mutations: {
     SET_NODES: (state, payload) => {
       state.nodes = payload;
+    },
+    SET_POSES: (state, payload) => {
+      state.poses = payload;
     },
     SET_IP_ADDRESS: (state, payload) => {
       state.ip_address = payload;
@@ -41,11 +50,16 @@ export const store = new Vuex.Store({
     },
     INIT_ROS: async (context) => {
       await context.commit('CHANGE_ROS')
+    },
+    UPDATE_POSES: async (context, payload) => {
+      await context.commit('SET_POSES', payload);
     }
-  }
-//   actions: {
-//     IP_ADDRES: (context, payload) {
-//       context.commit('SET_IP_ADDRESS', payload);
-// },
-// } https://habr.com/ru/post/421551/
-})
+  },
+  plugins: [createPersistedState({
+    storage: {
+      getItem: key => Cookies.get(key),
+      setItem: ((key, value) => Cookies.set(key, value, {expires: 3, secure: true})),
+      removeItem: key => Cookies.remove(key)
+    }
+  })]
+});

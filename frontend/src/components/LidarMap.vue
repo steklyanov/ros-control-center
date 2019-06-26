@@ -22,82 +22,104 @@
         </div>
       </form>
     </div>
-  <button id="move_btn" class="btn btn-danger" type="button">MOVE!</button>
-  <button id="save_poses" class="btn btn-danger" type="button">Call Service save poses!</button>
-    <button id="load_poses" class="btn btn-danger" type="button">Load poses!</button>
-    <button id="clear_pose" class="btn btn-danger" type="button">Clear poses!</button>
-    <button id="save_route" class="btn btn-danger" type="button">Save route!</button>
-    <div class="card text-center col-md-8">
-      <div class="card-header">
-        Poses
-      </div>
-      <div class="card-body">
-        <form>
-          <div class="form-row align-items-center">
-            <div class="col-auto">
-              <label class="sr-only" >FILEPATH</label>
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">path</div>
-                </div>
-                <input type="text" class="form-control" id="path" placeholder="File Path">
-              </div>
-            </div>
-            <div class="col-auto">
-              <label class="sr-only">FILENAME</label>
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">name</div>
-                </div>
-                <input type="text" id="filename" class="form-control" placeholder="File name">
-              </div>
-            </div>
-            <div class="col-auto">
-              <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" id="mode">
-                <label class="form-check-label">
-                  Prohibition mode
-                </label>
-              </div>
-            </div>
-            <div class="col-auto">
-              <button type="submit" class="btn btn-primary mb-2">Submit</button>
-            </div>
-          </div>
-        </form>
+    <div class="col-auto">
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="mode">
+        <label class="form-check-label">
+          Prohibition mode
+        </label>
       </div>
     </div>
-    <div class="card text-center col-md-8">
-      <div class="card-header">
-        Route
-      </div>
-      <div class="card-body">
-        <form>
-          <div class="form-row align-items-center">
-            <div class="col-auto">
-              <label class="sr-only" >FILEPATH</label>
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">path</div>
-                </div>
-                <input type="text" class="form-control" id="path_route" placeholder="File Path">
-              </div>
-            </div>
-            <div class="col-auto">
-              <label class="sr-only">FILENAME</label>
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">name</div>
-                </div>
-                <input type="text" id="filename_route" class="form-control" placeholder="File name">
-              </div>
-            </div>
-            <div class="col-auto">
-              <button type="submit" class="btn btn-primary mb-2">Submit</button>
-            </div>
+    <button id="move_btn" class="btn btn-danger" type="button">MOVE!</button>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Poses</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Routes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Prohibition</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="card text-center col-md-8">
+          <div class="card-header">
+            {{ $t('Pose') }}
           </div>
-        </form>
+          <div class="card-body">
+            <form>
+              <div class="form-row align-items-center">
+                <div class="col-auto">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">path</div>
+                    </div>
+                    <input type="text" class="form-control" id="path" placeholder="File Path">
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">name</div>
+                    </div>
+                    <input type="text" id="filename" class="form-control" placeholder="File name">
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button id="save_poses" class="btn btn-danger" type="button">Save</button>
+                </div>
+                <div class="col-auto">
+                  <button id="load_poses" class="btn btn-danger" type="button">Load</button>
+                </div>
+                <div class="col-auto">
+                  <button id="clear_pose" class="btn btn-danger" type="button">Clear</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card text-center col-md-8">
+          <div class="card-header">
+            Route
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="form-row align-items-center">
+                <div class="col-auto">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">path</div>
+                    </div>
+                    <input type="text" class="form-control" id="path_route">
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">name</div>
+                    </div>
+                    <input type="text" id="filename_route" class="form-control" placeholder="File name">
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button id="save_route" class="btn btn-danger" type="button">Save</button>
+                </div>
+                <div class="col-auto">
+                  <button id="load_route" class="btn btn-danger" type="button">Load</button>
+                </div>
+                <div class="col-auto">
+                  <button id="clear_route" class="btn btn-danger" type="button">Clear</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...ffffff</div>
     </div>
 
     <div class="card text-center col-md-8">
@@ -162,7 +184,8 @@
           path: null,
           mode: null,
           poses: [],
-          viewer: null
+          viewer: null,
+          active_el: 0
         };
       },
       display: "Custom Clone",
@@ -177,6 +200,8 @@
           this.loaderPose = document.getElementById("load_poses");
           this.clearPose = document.getElementById("clear_pose");
           this.saverRoute = document.getElementById("save_route");
+          this.clearRoute = document.getElementById("clear_route");
+          this.loaderRoute = document.getElementById("load_route");
           this.path = '/home/ubuntu/max_test_trash/';
           this.mode = document.getElementById("mode");
 
@@ -303,7 +328,31 @@
               this.clear_map();
             });
             // console.log(routes)
-          })
+          });
+
+          this.loaderRoute.addEventListener('click', ()=> {
+            this.clear_map();
+            let LoadRoute = new ROSLIB.Service({
+              ros,
+              name: '/load_route_and_poses',
+              serviceType: 'courier_file_server/LoadRouteAndPoses'
+            });
+            let final_path_poses = this.path + document.getElementById("filename").value;
+            let final_path_to_route = this.path + document.getElementById("filename_route").value;
+            let request = new ROSLIB.ServiceRequest({
+              path_to_waypoints :  final_path_poses,
+              path_to_route: final_path_to_route
+            });
+            console.log(request);
+            LoadRoute.callService(request, (result)=> {
+              console.log(result);
+              this.poses_list = result.waypoints.waypoints;
+              this.navigator.poses = [];
+              result['waypoints']['waypoints'].forEach((elem) => {
+                this.navigator.sendGoal(elem["pose"]);
+              })
+            })
+          });
         },
         log: function(evt) {
           window.console.log(evt);
@@ -313,6 +362,7 @@
             this.viewer.scene.removeChild(elem);
           });
           this.poses = [];
+          this.navigator.goals = [];
           this.navigator.waypoint_array = [];
           this.navigator.poses = [];
           this.navigator.triangles = [];
@@ -324,6 +374,9 @@
           // return {
           //   id: id,
           // };
+        },
+        activate:function(el){
+          this.active_el = el;
         }
       },
       mounted() {

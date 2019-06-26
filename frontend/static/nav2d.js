@@ -178,7 +178,7 @@ NAV2D.Navigator = function(options) {
   this.sendGoal = null;
   // let button = document.getElementById("put_marker");
   // let saverPose = document.getElementById("show_poses");
-  let goals = [];
+  this.goals = [];
   this.triangles = [];
 
   /**
@@ -208,19 +208,19 @@ NAV2D.Navigator = function(options) {
         }
       }
     });
-    goals.push(goal);
+    this.goals.push(goal);
 
     //IMPORTANT TO UNMUTE THIS LINE
     // goal.send();
     // create a marker for the goal
-    console.log(goals);
-    console.log(that.colors[goals.length]);
+    console.log(this.goals);
+    console.log(that.colors[this.goals.length]);
     var goalMarker = new ROS2D.NavigationArrow({
       size : 15,
       strokeSize : 1,
       // fillColor : createjs.Graphics.getRGB(255, 64, 128, 0.66),
-      fillColor : createjs.Graphics.getRGB(that.colors[goals.length][0],that.colors[goals.length][1],
-        that.colors[goals.length][2], 0.66),
+      fillColor : createjs.Graphics.getRGB(that.colors[this.goals.length][0],that.colors[this.goals.length][1],
+        that.colors[this.goals.length][2], 0.66),
       pulse : true
     });
     goalMarker.x = pose.position.x;
@@ -248,8 +248,8 @@ NAV2D.Navigator = function(options) {
   var robotMarker = new ROS2D.NavigationArrow({
     size : 25,
     strokeSize : 1,
-    fillColor : createjs.Graphics.getRGB(this.colors[goals.length][0],this.colors[goals.length][1],
-      this.colors[goals.length][2], 0.8),
+    fillColor : createjs.Graphics.getRGB(this.colors[this.goals.length][0],this.colors[this.goals.length][1],
+      this.colors[this.goals.length][2], 0.8),
     pulse : true
   });
   // wait for a pose to come in first
@@ -485,7 +485,7 @@ NAV2D.Navigator = function(options) {
     //   }
     // });
     this.moveBtn.addEventListener("click", () => {
-      goals.forEach((item) => {item.send()})
+      this.goals.forEach((item) => {item.send()})
     });
     this.clearPose.addEventListener("click", () => {
       let cleanPose = new ROSLIB.Service({
