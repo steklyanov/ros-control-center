@@ -223,8 +223,7 @@
           poses: [],
           viewer: null,
           active_el: 0,
-          polygon_arr: [],
-          root_polygon: [],
+          polygons: [],
         };
       },
       display: "Custom Clone",
@@ -246,6 +245,7 @@
           this.loaderProhibition = document.getElementById("load_prohibition");
           this.path = '/home/ubuntu/max_test_trash/';
           this.mode = document.getElementById("mode");
+          this.polygon_arr = [];
 
           let ros = this.$store.getters.GET_ROS;
           this.viewer = new ROS2D.Viewer({
@@ -397,13 +397,13 @@
           });
 
           this.saverProhibition.addEventListener('click', () => {
-            this.root_polygon.push(this.navigator.new_polygon);
             let SaveProhibition = new ROSLIB.Service({
               ros,
               name: '/save_prohibition',
               serviceType: 'courier_file_server/SaveProhibition'
             });
             let points = [];
+            // let polygon_arr = [];
             this.navigator.new_polygon.forEach((elem) => {
               const point32_msg = new ROSLIB.Message({
                 x: elem.x,
@@ -421,6 +421,8 @@
               fill_polygons: false,
               polygons: this.polygon_arr
             });
+            this.polygons = prohibition_msg;
+            console.log(this.polygons);
             let final_path = this.path + document.getElementById("filename_prohibition").value;
             let request = new ROSLIB.ServiceRequest({
               path :  final_path,
@@ -428,14 +430,12 @@
             });
             console.log(request);
             SaveProhibition.callService(request, (result)=> {
-              console.log(result);
-              this.clear_map();
+              this.loaderProhibition.click();
             });
-            this.navigator.putProhibitionPoint("delete");
-            // console.log(routes)
           });
 
           this.loaderProhibition.addEventListener('click', ()=> {
+            console.log("Start loading prohibition");
             // this.clear_map();
             let LoadProhibition = new ROSLIB.Service({
               ros,
@@ -446,24 +446,27 @@
             let request = new ROSLIB.ServiceRequest({
               path :  final_path
             });
-            console.log(request);
             LoadProhibition.callService(request, (result)=> {
-              console.log(result);
-              result.prohibition.polygons.forEach((elem) => {
-                var polygon = new ROS2D.PolygonMarker({
-                  lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
-                });
-
-                this.viewer.scene.addChild(polygon);
-                elem.points.forEach((point)=> {
-                  polygon.addPoint(point)
-                })
-              })
+              this.polygon_arr = result.prohibition.polygons;
+              this.polygons = result.prohibition;
+              this.draw_polygons();
             })
           });
         },
         log: function(evt) {
           window.console.log(evt);
+        },
+        draw_polygons() {
+          this.polygons.polygons.forEach((elem) => {
+            const polygon = new ROS2D.PolygonMarker({
+              lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
+            });
+
+            this.viewer.scene.addChild(polygon);
+            elem.points.forEach((point)=> {
+              polygon.addPoint(point)
+            })
+          })
         },
         clear_map() {
           this.navigator.triangles.forEach((elem) => {
