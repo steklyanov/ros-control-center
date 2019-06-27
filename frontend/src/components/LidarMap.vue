@@ -132,7 +132,7 @@
                     <div class="input-group-prepend">
                       <div class="input-group-text">path</div>
                     </div>
-                    <input type="text" class="form-control" id="path_prohibition">
+                    <input type="text" v-bind:placeholder="this.path" class="form-control" id="path_prohibition">
                   </div>
                 </div>
                 <div class="col-auto">
@@ -203,6 +203,7 @@
 <script>
   import ROSLIB from "roslib"
   import draggable from "vuedraggable";
+  import { mapGetters } from 'vuex'
 
     export default {
       name: "LidarMap",
@@ -231,6 +232,7 @@
       components: {
         draggable
       },
+
       methods: {
         init_navigation_elements() {
           this.saverPose = document.getElementById("save_poses");
@@ -296,6 +298,7 @@
             LoadPose.callService(request, (result)=> {
               this.poses_list = result.waypoints.waypoints;
               this.navigator.poses = [];
+              localStorage.setItem('poses', JSON.stringify(this.poses_list));
               result['waypoints']['waypoints'].forEach((elem) => {
                 this.navigator.sendGoal(elem["pose"]);
               })
@@ -422,7 +425,6 @@
               polygons: this.polygon_arr
             });
             this.polygons = prohibition_msg;
-            console.log(this.polygons);
             let final_path = this.path + document.getElementById("filename_prohibition").value;
             let request = new ROSLIB.ServiceRequest({
               path :  final_path,
@@ -449,6 +451,8 @@
             LoadProhibition.callService(request, (result)=> {
               this.polygon_arr = result.prohibition.polygons;
               this.polygons = result.prohibition;
+              localStorage.setItem('polygons', JSON.stringify(this.polygons));
+              console.log("store");
               this.draw_polygons();
             })
           });
@@ -461,7 +465,6 @@
             const polygon = new ROS2D.PolygonMarker({
               lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
             });
-
             this.viewer.scene.addChild(polygon);
             elem.points.forEach((point)=> {
               polygon.addPoint(point)
@@ -491,11 +494,20 @@
         },
         activate:function(el){
           this.active_el = el;
+        },
+        build_map() {
+          this.polygons = JSON.parse(localStorage.getItem('polygons'));
+          this.draw_polygons();
+          // this.poses_list = JSON.parse(localStorage.getItem('poses'));
+          // this.poses_list.forEach((elem) => {
+          //   this.navigator.sendGoal(elem["pose"]);
+          // })
         }
       },
-      mounted() {
-        this.init_navigation_elements();
-      }
+      async mounted() {
+        await this.init_navigation_elements();
+        this.build_map();
+      },
     }
 </script>
 <style scoped>

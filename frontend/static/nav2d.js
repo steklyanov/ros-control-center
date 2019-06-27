@@ -213,7 +213,6 @@ NAV2D.Navigator = function(options) {
     //IMPORTANT TO UNMUTE THIS LINE
     // goal.send();
     // create a marker for the goal
-    console.log(this.goals);
     console.log(that.colors[this.goals.length]);
     var goalMarker = new ROS2D.NavigationArrow({
       size : 15,
@@ -347,7 +346,6 @@ NAV2D.Navigator = function(options) {
           var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
           polygon.movePoint(selectedPointIndex, pos);
           that.new_polygon[selectedPointIndex] = pos;
-          console.log(that.new_polygon);
         }
       };
 
@@ -378,13 +376,12 @@ NAV2D.Navigator = function(options) {
 
     let saverProhibition = document.getElementById("save_prohibition");
     saverProhibition.addEventListener("click", (()=> {
-      console.log("worked once");
       that.rootObject.removeAllEventListeners();
       this.rootObject.addEventListener('stagemousedown', function(event) {
         if (mode.checked) {
           if (is_drawing === 0) {
             is_drawing = 1;
-            this.putProhibitionPoint(event);
+            that.putProhibitionPoint(event);
           }
         }
         else {

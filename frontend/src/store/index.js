@@ -11,7 +11,8 @@ export const store = new Vuex.Store({
     ip_address: null,
     ros: new ROSLIB.Ros,
     nodes: {},
-    poses: []
+    poses: [],
+    polygons: {}
   },
   getters: {
     GET_NODES: state => {
@@ -25,6 +26,9 @@ export const store = new Vuex.Store({
     },
     GET_POSES: state => {
       return state.poses;
+    },
+    GET_POLYGONS: state => {
+      return state.polygons;
     }
   },
   mutations: {
@@ -39,10 +43,12 @@ export const store = new Vuex.Store({
     },
     CHANGE_ROS: (state) => {
       state.ros = new ROSLIB.Ros({
-        // url : "ws://10.0.1.7:9090"
         url: state.ip_address
       })
-    }
+    },
+    SET_POLYGONS: (state, payload) => {
+      state.polygons = payload;
+    },
   },
   actions: {
     UPDATE_NODES: async (context, payload) => {
@@ -53,6 +59,12 @@ export const store = new Vuex.Store({
     },
     UPDATE_POSES: async (context, payload) => {
       await context.commit('SET_POSES', payload);
+    },
+    UPDATE_POLYGONS: async (context, payload) => {
+      await context.commit('SET_POLYGONS', payload);
+    },
+    GET_POLYGONS: async (context, payload) => {
+      await context.commit('SET_POLYGONS', payload);
     }
   },
   plugins: [createPersistedState({
