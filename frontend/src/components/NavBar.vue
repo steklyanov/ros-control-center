@@ -34,6 +34,10 @@
             <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter" href="#">Settings</a>
           </li>
         </ul>
+        <div>
+          <a href="#" @click="setLocale('en')"><flag iso="us"></flag></a>
+          <a href="#" @click="setLocale('ru')"><flag iso="ru"></flag></a>
+        </div>
         <span class="navbar-text">
           <div class="progress" style="width: 100px; height: 25px">
             <div class="progress-bar" role="progressbar" style="width: 60%;"
@@ -82,7 +86,10 @@
             batteryTopic.subscribe(message => {
               this.batteryStatus = Math.round(message.data * 1000) / 1000;
             })
-          }
+          },
+        setLocale(locale){
+          this.$i18n.locale = locale
+        }
       }
     }
 </script>

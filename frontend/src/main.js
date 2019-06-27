@@ -9,14 +9,18 @@ import 'nipplejs/dist/nipplejs'
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import {store} from './store';
+import {i18n} from './plugins/i18n'
+import FlagIcon from 'vue-flag-icon'
 
 Vue.config.productionTip = false
+Vue.use(FlagIcon)
 
 /* eslint-disable no-new */
 new Vue({
+  i18n,
   el: '#app',
   store,
   router,
   components: { App },
   template: '<App/>'
-})
+});

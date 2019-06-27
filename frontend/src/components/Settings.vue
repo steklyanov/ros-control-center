@@ -1,23 +1,28 @@
 /* eslint-disable */
-<template lang="pug">
-  div
-    // MODAL
-    #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
-      .modal-dialog.modal-dialog-centered(role='document')
-        .modal-content
-          .modal-header
-            h5#exampleModalCenterTitle.modal-title robot IP address
-            button.close(type='button', data-dismiss='modal', aria-label='Close')
-              span(aria-hidden='true') ×
-          .modal-body
-            .input-group.mb-3
-              .input-group-prepend
-                span#basic-addon3.input-group-text IP-address
-              input#ip_address.form-control(type='text', ref='ip_field', v-bind:placeholder='this.$store.getters.IP_ADDRESS', aria-describedby='basic-addon1')
-          .modal-footer
-            button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-            button.btn.btn-primary(type='button', data-dismiss='modal', v-on:click='save_settings') Save changes
-
+<template >
+  <div>
+    <!-- MODAL-->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">robot IP address</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend"><span class="input-group-text" id="basic-addon3">IP-address</span></div>
+              <input class="form-control" id="ip_address" type="text" ref="ip_field" v-bind:placeholder="this.$store.getters.IP_ADDRESS" aria-describedby="basic-addon1"/>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            <button class="btn btn-primary" type="button" data-dismiss="modal" v-on:click="save_settings">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

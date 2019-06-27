@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button v-on:click="lidControl(1)" type="button" class="btn btn-primary btn-lg">Открыть крышку</button>
-    <button v-on:click="lidControl(0)" type="button" class="btn btn-primary btn-lg">Закрыть крышку</button>
+    <button v-on:click="lidControl(1)" type="button" class="btn btn-primary btn-lg">{{ $t('OpenLid') }}</button>
+    <button v-on:click="lidControl(0)" type="button" class="btn btn-primary btn-lg">{{ $t('CloseLid') }}</button>
   </div>
 </template>
 

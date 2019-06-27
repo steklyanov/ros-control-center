@@ -153,17 +153,15 @@ NAV2D.Navigator = function(options) {
     var actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
     var withOrientation = options.withOrientation || false;
     this.rootObject = options.rootObject || new createjs.Container();
+    this.saverPose = options.saverPose;
+    this.moveBtn = options.moveBtn;
+    this.loaderPose = options.loaderPose;
+    this.clearPose = options.clearPose;
+    this.path = options.path;
+    this.poses = options.poses;
+    this.mode = options.mode;
+    this.new_polygon = [];
 
-    if (this instanceof NAV2D.Navigator) {
-      this.saverPose = document.getElementById("show_poses");
-      this.moveBtn = document.getElementById("move_btn");
-      this.loaderPose = document.getElementById("load_poses");
-      this.clearPose = document.getElementById("clear_pose");
-      this.path = '/home/ubuntu/max_test_trash/';
-      // let mode = document.getElementById("mode");
-      this.mode = document.getElementById("mode");
-
-    }
 
 
 
@@ -174,15 +172,15 @@ NAV2D.Navigator = function(options) {
     serverName : this.serverName
   });
   // MY CODE
-  this.poses = [];
-  console.log(this.poses);
+  // this.poses = [];
   this.waypoint_array = [];
-  let colors = [[230, 25, 75], [60, 180, 75], [255, 225, 25], [0, 130, 200], [245, 130, 48],
+  this.colors = [[230, 25, 75], [60, 180, 75], [255, 225, 25], [0, 130, 200], [245, 130, 48],
     [145, 30, 180], [70, 240, 240], [240, 50, 230], [230, 190, 255]];
+  this.sendGoal = null;
   // let button = document.getElementById("put_marker");
   // let saverPose = document.getElementById("show_poses");
-  let goals = [];
-  let triangles = [];
+  this.goals = [];
+  this.triangles = [];
 
   /**
    * Send a goal to the navigation stack with the given pose.
@@ -190,7 +188,7 @@ NAV2D.Navigator = function(options) {
    * @param pose - the goal pose
    */
 
-  function sendGoal(pose) {
+  this.sendGoal = function (pose) {
     let unique = 1;
     that.poses.forEach((item) => {
       if (JSON.stringify(item) === JSON.stringify(pose)) {
@@ -210,19 +208,19 @@ NAV2D.Navigator = function(options) {
         }
       }
     });
-    goals.push(goal);
+    this.goals.push(goal);
 
     //IMPORTANT TO UNMUTE THIS LINE
     // goal.send();
     // create a marker for the goal
-    console.log(goals);
-    console.log(colors[goals.length]);
+    console.log(this.goals);
+    console.log(that.colors[this.goals.length]);
     var goalMarker = new ROS2D.NavigationArrow({
       size : 15,
       strokeSize : 1,
       // fillColor : createjs.Graphics.getRGB(255, 64, 128, 0.66),
-      fillColor : createjs.Graphics.getRGB(colors[goals.length][0],colors[goals.length][1],
-        colors[goals.length][2], 0.66),
+      fillColor : createjs.Graphics.getRGB(that.colors[this.goals.length][0],that.colors[this.goals.length][1],
+        that.colors[this.goals.length][2], 0.66),
       pulse : true
     });
     goalMarker.x = pose.position.x;
@@ -231,7 +229,7 @@ NAV2D.Navigator = function(options) {
     goalMarker.scaleX = 1.0 / stage.scaleX;
     goalMarker.scaleY = 1.0 / stage.scaleY;
     that.rootObject.addChild(goalMarker);
-    triangles.push(goalMarker);
+    this.triangles.push(goalMarker);
 
     goal.on('result', function() {
       that.rootObject.removeChild(goalMarker);
@@ -250,8 +248,8 @@ NAV2D.Navigator = function(options) {
   var robotMarker = new ROS2D.NavigationArrow({
     size : 25,
     strokeSize : 1,
-    fillColor : createjs.Graphics.getRGB(colors[goals.length][0],colors[goals.length][1],
-      colors[goals.length][2], 0.8),
+    fillColor : createjs.Graphics.getRGB(this.colors[this.goals.length][0],this.colors[this.goals.length][1],
+      this.colors[this.goals.length][2], 0.8),
     pulse : true
   });
   // wait for a pose to come in first
@@ -291,7 +289,7 @@ NAV2D.Navigator = function(options) {
         position : new ROSLIB.Vector3(coords)
       });
       // send the goal
-      sendGoal(pose);
+      this.sendGoal(pose);
     });
   } else {
     // withOrientation === true
@@ -305,25 +303,102 @@ NAV2D.Navigator = function(options) {
     var xDelta = 0;
     var yDelta = 0;
 
-    var putProhibitionPoint = function(event) {
-      var currentPos = stage.globalToRos(event.stageX, event.stageY);
-      var currentPosVec3 = new ROSLIB.Vector3(currentPos);
+    var clickedPolygon = false;
+    var selectedPointIndex = null;
+    var is_drawing = 0;
 
-      var clickedPolygon = false;
-      var selectedPointIndex = null;
-      console.log("polygon");
+    this.putProhibitionPoint = function(event) {
+      that.new_polygon = [];
+      console.log(event);
+      // Callback functions when there is mouse interaction with the polygon
+      
+      var pointCallBack = function(type, event, index) {
+        if (type === 'mousedown') {
+          if (event.nativeEvent.shiftKey === true) {
+            polygon.remPoint(index);
+            that.new_polygon.splice(index, 1);
+            console.log(that.new_polygon);
+          }
+          else {
+            selectedPointIndex = index;
+          }
+        }
+        clickedPolygon = true;
+      };
+      var lineCallBack = function(type, event, index) {
+        if (type === 'mousedown') {
+          if (event.nativeEvent.ctrlKey === true) {
+            polygon.splitLine(index);
+          }
+        }
+        clickedPolygon = true;
+      };
+
       // Create the polygon
-      var polygon = createjs.Graphics.getRGB(100, 100, 255, 1);
+      var polygon = new ROS2D.PolygonMarker({
+        lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
+        pointCallBack : pointCallBack,
+        lineCallBack : lineCallBack
+      });
 
+      let move_point = function(event) {
+        // Move point when it's dragged
+        if (selectedPointIndex !== null) {
+          var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
+          polygon.movePoint(selectedPointIndex, pos);
+          that.new_polygon[selectedPointIndex] = pos;
+          console.log(that.new_polygon);
+        }
+      };
 
-      var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
-      // polygon.addPoint(pos);
+      let add_point = function(event) {
+        // Add point when not clicked on the polygon
+        if (selectedPointIndex !== null) {
+          selectedPointIndex = null;
+        }
+        else if (that.rootObject.mouseInBounds === true && clickedPolygon === false) {
+          var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
+          console.log(pos, "pos");
+          polygon.addPoint(pos);
+          that.new_polygon.push(pos);
+          console.log(that.new_polygon);
+        }
+        clickedPolygon = false;
+      };
 
       // Add the polygon to the viewer
       that.rootObject.addChild(polygon);
       // Event listeners for mouse interaction with the stage
+      that.rootObject.mouseMoveOutside = false; // doesn't seem to work
+      console.log("here");
+      that.rootObject.addEventListener('stagemousemove', move_point);
+      // that.rootObject.removeAllEventListeners();
+      that.rootObject.addEventListener('stagemouseup', add_point);
+    };
 
-    }
+    let saverProhibition = document.getElementById("save_prohibition");
+    saverProhibition.addEventListener("click", ()=> {
+      that.rootObject.removeAllEventListeners();
+      this.rootObject.addEventListener('stagemousedown', function(event) {
+        if (mode.checked) {
+          if (is_drawing === 0) {
+            is_drawing = 1;
+            this.putProhibitionPoint(event);
+          }
+        }
+        else {
+          mouseEventHandler(event,'down');
+        }
+      });
+
+      this.rootObject.addEventListener('stagemousemove', function(event) {
+        mouseEventHandler(event,'move');
+      });
+
+      this.rootObject.addEventListener('stagemouseup', function(event) {
+        mouseEventHandler(event,'up');
+      });
+    });
 
     var mouseEventHandler = function(event, mouseState) {
 
@@ -405,25 +480,17 @@ NAV2D.Navigator = function(options) {
           position :    positionVec3,
           orientation : orientation
         });
-        // send the goal
 
-        sendGoal(pose);
+        that.sendGoal(pose);
       }
     };
 
-    // costmap_prohibition_layer/ProhibitionAreas prohibition
-    // bool fill_polygons
-    // geometry_msgs/Polygon[] polygons
-    // geometry_msgs/Point32[] points
-    // float32 x
-    // float32 y
-    // float32 z
-    // ---
-    //   string status
-
     this.rootObject.addEventListener('stagemousedown', function(event) {
       if (mode.checked) {
-        putProhibitionPoint(event);
+        if (is_drawing === 0) {
+          is_drawing = 1;
+          that.putProhibitionPoint(event);
+        }
       }
       else {
         mouseEventHandler(event,'down');
@@ -438,77 +505,8 @@ NAV2D.Navigator = function(options) {
       mouseEventHandler(event,'up');
     });
 
-    this.saverPose.addEventListener('click', () => {
-      if (this.poses.length) {
-        this.waypoint_array = [];
-        this.poses.forEach((elem) => {
-          const id = 1;
-          const description = "description";
-          const pose = new ROSLIB.Message({
-            position : {
-              x : elem['position']['x'],
-              y : elem['position']['y'],
-              z : elem['position']['z']
-            },
-            orientation : {
-              x : elem['orientation']['x'],
-              y : elem['orientation']['y'],
-              z : elem['orientation']['z'],
-              w : elem['orientation']['w']
-            }
-          });
-          const waypoint = new ROSLIB.Message({
-            id : id,
-            description : description,
-            pose : pose
-          });
-          this.waypoint_array.push(waypoint);
-        });
-        let SavePose = new ROSLIB.Service({
-          ros: ros,
-          name: '/save_poses',
-          serviceType: 'courier_file_server/SavePoses'
-        });
-        let pose_arr = new ROSLIB.Message({
-          waypoints : this.waypoint_array
-        });
-        let final_path = this.path + document.getElementById("filename").value;
-        let request = new ROSLIB.ServiceRequest({
-          path :  final_path,
-          waypoints : pose_arr
-        });
-        // console.log(request);
-        console.log(triangles, "triangles");
-        SavePose.callService(request, (result) => {
-          // console.log(that.rootObject, "before");
-          console.log(result);
-          triangles.forEach((elem) => {
-            // console.log(elem, "elem");
-            that.rootObject.removeChild(elem);
-          });
-          // console.log(that.rootObject);
-        })
-      }
-    });
     this.moveBtn.addEventListener("click", () => {
-      goals.forEach((item) => {item.send()})
-    });
-    this.loaderPose.addEventListener("click", () => {
-       let LoadPose = new ROSLIB.Service({
-         ros,
-         name: '/load_poses',
-         serviceType: 'courier_file_server/LoadPoses'
-       });
-      let final_path = this.path + document.getElementById("filename").value;
-      let request = new ROSLIB.ServiceRequest({
-        path :  final_path,
-      });
-      LoadPose.callService(request, (result)=> {
-        this.waypoint_array = result;
-        result['waypoints']['waypoints'].forEach((elem) => {
-          sendGoal(elem["pose"]);
-        })
-      })
+      this.goals.forEach((item) => {item.send()})
     });
     this.clearPose.addEventListener("click", () => {
       let cleanPose = new ROSLIB.Service({
