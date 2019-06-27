@@ -11,11 +11,15 @@ export const i18n = new VueI18n({
       Pose: 'Pose',
       OpenLid: 'Open lid',
       CloseLid: 'Close lid',
+      Prohibition: 'Prohibition',
+      Routes: 'Routes',
     },
     ru: {
       Pose: 'Позиция',
       OpenLid: 'Открыть крышку',
       CloseLid: 'Закрыть крышку',
+      Prohibition: 'Запретные зоны',
+      Routes: 'Маршруты',
     }
 
   }

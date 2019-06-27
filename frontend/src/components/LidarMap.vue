@@ -39,7 +39,7 @@
         <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Routes</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Prohibition</a>
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">{{ $t('Prohibition') }}</a>
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -119,7 +119,44 @@
           </div>
         </div>
       </div>
-      <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...ffffff</div>
+      <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="card text-center col-md-8">
+          <div class="card-header">
+            {{ $t('Prohibition') }}
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="form-row align-items-center">
+                <div class="col-auto">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">path</div>
+                    </div>
+                    <input type="text" class="form-control" id="path_prohibition">
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">name</div>
+                    </div>
+                    <input type="text" id="filename_prohibition" class="form-control" placeholder="File name">
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button id="save_prohibition" class="btn btn-danger" type="button">Save</button>
+                </div>
+                <div class="col-auto">
+                  <button id="load_prohibition" class="btn btn-danger" type="button">Load</button>
+                </div>
+                <div class="col-auto">
+                  <button id="clear_prohibition" class="btn btn-danger" type="button">Clear</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card text-center col-md-8">
@@ -185,7 +222,9 @@
           mode: null,
           poses: [],
           viewer: null,
-          active_el: 0
+          active_el: 0,
+          polygon_arr: [],
+          root_polygon: [],
         };
       },
       display: "Custom Clone",
@@ -202,6 +241,9 @@
           this.saverRoute = document.getElementById("save_route");
           this.clearRoute = document.getElementById("clear_route");
           this.loaderRoute = document.getElementById("load_route");
+          this.saverProhibition = document.getElementById("save_prohibition");
+          this.clearProhibition = document.getElementById("clear_prohibition");
+          this.loaderProhibition = document.getElementById("load_prohibition");
           this.path = '/home/ubuntu/max_test_trash/';
           this.mode = document.getElementById("mode");
 
@@ -353,6 +395,72 @@
               })
             })
           });
+
+          this.saverProhibition.addEventListener('click', () => {
+            this.root_polygon.push(this.navigator.new_polygon);
+            let SaveProhibition = new ROSLIB.Service({
+              ros,
+              name: '/save_prohibition',
+              serviceType: 'courier_file_server/SaveProhibition'
+            });
+            let points = [];
+            this.navigator.new_polygon.forEach((elem) => {
+              const point32_msg = new ROSLIB.Message({
+                x: elem.x,
+                y: elem.y,
+                z: elem.z
+              });
+              points.push(point32_msg);
+            });
+            // points[points.length] = points[0];
+            const polygon_msg = new ROSLIB.Message({
+              points: points
+            });
+            this.polygon_arr.push(polygon_msg);
+            const prohibition_msg = new ROSLIB.Message({
+              fill_polygons: false,
+              polygons: this.polygon_arr
+            });
+            let final_path = this.path + document.getElementById("filename_prohibition").value;
+            let request = new ROSLIB.ServiceRequest({
+              path :  final_path,
+              prohibition : prohibition_msg
+            });
+            console.log(request);
+            SaveProhibition.callService(request, (result)=> {
+              console.log(result);
+              this.clear_map();
+            });
+            this.navigator.putProhibitionPoint("delete");
+            // console.log(routes)
+          });
+
+          this.loaderProhibition.addEventListener('click', ()=> {
+            // this.clear_map();
+            let LoadProhibition = new ROSLIB.Service({
+              ros,
+              name: '/load_prohibition',
+              serviceType: 'courier_file_server/LoadProhibition'
+            });
+            let final_path = this.path + document.getElementById("filename_prohibition").value;
+            let request = new ROSLIB.ServiceRequest({
+              path :  final_path
+            });
+            console.log(request);
+            LoadProhibition.callService(request, (result)=> {
+              console.log(result);
+              result.prohibition.polygons.forEach((elem) => {
+                var polygon = new ROS2D.PolygonMarker({
+                  lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
+                });
+
+                this.viewer.scene.addChild(polygon);
+                elem.points.forEach((point)=> {
+                  polygon.addPoint(point)
+                })
+              })
+            })
+          });
         },
         log: function(evt) {
           window.console.log(evt);
@@ -367,6 +475,9 @@
           this.navigator.poses = [];
           this.navigator.triangles = [];
         },
+        // clear_prohibition() {
+        //   this.navigator.
+        // },
         clonePosition({ id }) {
           console.log(this.poses_list[id]);
           console.log(this.route_list);

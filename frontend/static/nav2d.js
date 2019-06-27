@@ -160,6 +160,7 @@ NAV2D.Navigator = function(options) {
     this.path = options.path;
     this.poses = options.poses;
     this.mode = options.mode;
+    this.new_polygon = [];
 
 
 
@@ -188,7 +189,6 @@ NAV2D.Navigator = function(options) {
    */
 
   this.sendGoal = function (pose) {
-    console.log("wwwww");
     let unique = 1;
     that.poses.forEach((item) => {
       if (JSON.stringify(item) === JSON.stringify(pose)) {
@@ -307,15 +307,17 @@ NAV2D.Navigator = function(options) {
     var selectedPointIndex = null;
     var is_drawing = 0;
 
-    var putProhibitionPoint = function(event) {
-      console.log("im inside prohibition");
+    this.putProhibitionPoint = function(event) {
+      that.new_polygon = [];
+      console.log(event);
       // Callback functions when there is mouse interaction with the polygon
-
-
+      
       var pointCallBack = function(type, event, index) {
         if (type === 'mousedown') {
           if (event.nativeEvent.shiftKey === true) {
             polygon.remPoint(index);
+            that.new_polygon.splice(index, 1);
+            console.log(that.new_polygon);
           }
           else {
             selectedPointIndex = index;
@@ -330,7 +332,7 @@ NAV2D.Navigator = function(options) {
           }
         }
         clickedPolygon = true;
-      }
+      };
 
       // Create the polygon
       var polygon = new ROS2D.PolygonMarker({
@@ -339,43 +341,64 @@ NAV2D.Navigator = function(options) {
         lineCallBack : lineCallBack
       });
 
-
-      // Add the polygon to the viewer
-      that.rootObject.addChild(polygon);
-      // Event listeners for mouse interaction with the stage
-      that.rootObject.mouseMoveOutside = false; // doesn't seem to work
-      that.rootObject.addEventListener('stagemousemove', function(event) {
+      let move_point = function(event) {
         // Move point when it's dragged
         if (selectedPointIndex !== null) {
           var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
           polygon.movePoint(selectedPointIndex, pos);
+          that.new_polygon[selectedPointIndex] = pos;
+          console.log(that.new_polygon);
         }
-      });
+      };
 
-      that.rootObject.addEventListener('stagemouseup', function(event) {
+      let add_point = function(event) {
         // Add point when not clicked on the polygon
         if (selectedPointIndex !== null) {
           selectedPointIndex = null;
         }
         else if (that.rootObject.mouseInBounds === true && clickedPolygon === false) {
           var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
+          console.log(pos, "pos");
           polygon.addPoint(pos);
+          that.new_polygon.push(pos);
+          console.log(that.new_polygon);
         }
         clickedPolygon = false;
-      });
-
-      // Create the polygon
-      // var polygon = createjs.Graphics.getRGB(100, 100, 255, 1);
-
-
-      // var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
-      // polygon.addPoint(pos);
+      };
 
       // Add the polygon to the viewer
-      // that.rootObject.addChild(polygon);
+      that.rootObject.addChild(polygon);
       // Event listeners for mouse interaction with the stage
+      that.rootObject.mouseMoveOutside = false; // doesn't seem to work
+      console.log("here");
+      that.rootObject.addEventListener('stagemousemove', move_point);
+      // that.rootObject.removeAllEventListeners();
+      that.rootObject.addEventListener('stagemouseup', add_point);
+    };
 
-    }
+    let saverProhibition = document.getElementById("save_prohibition");
+    saverProhibition.addEventListener("click", ()=> {
+      that.rootObject.removeAllEventListeners();
+      this.rootObject.addEventListener('stagemousedown', function(event) {
+        if (mode.checked) {
+          if (is_drawing === 0) {
+            is_drawing = 1;
+            this.putProhibitionPoint(event);
+          }
+        }
+        else {
+          mouseEventHandler(event,'down');
+        }
+      });
+
+      this.rootObject.addEventListener('stagemousemove', function(event) {
+        mouseEventHandler(event,'move');
+      });
+
+      this.rootObject.addEventListener('stagemouseup', function(event) {
+        mouseEventHandler(event,'up');
+      });
+    });
 
     var mouseEventHandler = function(event, mouseState) {
 
@@ -457,27 +480,16 @@ NAV2D.Navigator = function(options) {
           position :    positionVec3,
           orientation : orientation
         });
-        // send the goal
 
         that.sendGoal(pose);
       }
     };
 
-    // costmap_prohibition_layer/ProhibitionAreas prohibition
-    // bool fill_polygons
-    // geometry_msgs/Polygon[] polygons
-    // geometry_msgs/Point32[] points
-    // float32 x
-    // float32 y
-    // float32 z
-    // ---
-    //   string status
-
     this.rootObject.addEventListener('stagemousedown', function(event) {
       if (mode.checked) {
         if (is_drawing === 0) {
           is_drawing = 1;
-          putProhibitionPoint(event);
+          that.putProhibitionPoint(event);
         }
       }
       else {
@@ -493,54 +505,6 @@ NAV2D.Navigator = function(options) {
       mouseEventHandler(event,'up');
     });
 
-    // this.saverPose.addEventListener('click', () => {
-    //   if (this.poses.length) {
-    //     this.waypoint_array = [];
-    //     this.poses.forEach((elem) => {
-    //       const id = 1;
-    //       const description = "description";
-    //       const pose = new ROSLIB.Message({
-    //         position : {
-    //           x : elem['position']['x'],
-    //           y : elem['position']['y'],
-    //           z : elem['position']['z']
-    //         },
-    //         orientation : {
-    //           x : elem['orientation']['x'],
-    //           y : elem['orientation']['y'],
-    //           z : elem['orientation']['z'],
-    //           w : elem['orientation']['w']
-    //         }
-    //       });
-    //       const waypoint = new ROSLIB.Message({
-    //         id : id,
-    //         description : description,
-    //         pose : pose
-    //       });
-    //       this.waypoint_array.push(waypoint);
-    //     });
-    //     let SavePose = new ROSLIB.Service({
-    //       ros: ros,
-    //       name: '/save_poses',
-    //       serviceType: 'courier_file_server/SavePoses'
-    //     });
-    //     let pose_arr = new ROSLIB.Message({
-    //       waypoints : this.waypoint_array
-    //     });
-    //     let final_path = this.path + document.getElementById("filename").value;
-    //     let request = new ROSLIB.ServiceRequest({
-    //       path :  final_path,
-    //       waypoints : pose_arr
-    //     });
-    //     console.log(triangles, "triangles");
-    //     SavePose.callService(request, (result) => {
-    //       console.log(result);
-    //       triangles.forEach((elem) => {
-    //         that.rootObject.removeChild(elem);
-    //       });
-    //     })
-    //   }
-    // });
     this.moveBtn.addEventListener("click", () => {
       this.goals.forEach((item) => {item.send()})
     });
