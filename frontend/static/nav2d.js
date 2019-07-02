@@ -213,7 +213,6 @@ NAV2D.Navigator = function(options) {
     //IMPORTANT TO UNMUTE THIS LINE
     // goal.send();
     // create a marker for the goal
-    console.log(this.goals);
     console.log(that.colors[this.goals.length]);
     var goalMarker = new ROS2D.NavigationArrow({
       size : 15,
@@ -347,7 +346,6 @@ NAV2D.Navigator = function(options) {
           var pos = that.rootObject.globalToRos(event.stageX, event.stageY);
           polygon.movePoint(selectedPointIndex, pos);
           that.new_polygon[selectedPointIndex] = pos;
-          console.log(that.new_polygon);
         }
       };
 
@@ -377,13 +375,13 @@ NAV2D.Navigator = function(options) {
     };
 
     let saverProhibition = document.getElementById("save_prohibition");
-    saverProhibition.addEventListener("click", ()=> {
+    saverProhibition.addEventListener("click", (()=> {
       that.rootObject.removeAllEventListeners();
       this.rootObject.addEventListener('stagemousedown', function(event) {
         if (mode.checked) {
           if (is_drawing === 0) {
             is_drawing = 1;
-            this.putProhibitionPoint(event);
+            that.putProhibitionPoint(event);
           }
         }
         else {
@@ -398,7 +396,7 @@ NAV2D.Navigator = function(options) {
       this.rootObject.addEventListener('stagemouseup', function(event) {
         mouseEventHandler(event,'up');
       });
-    });
+    })());
 
     var mouseEventHandler = function(event, mouseState) {
 
@@ -484,26 +482,6 @@ NAV2D.Navigator = function(options) {
         that.sendGoal(pose);
       }
     };
-
-    this.rootObject.addEventListener('stagemousedown', function(event) {
-      if (mode.checked) {
-        if (is_drawing === 0) {
-          is_drawing = 1;
-          that.putProhibitionPoint(event);
-        }
-      }
-      else {
-        mouseEventHandler(event,'down');
-      }
-    });
-
-    this.rootObject.addEventListener('stagemousemove', function(event) {
-      mouseEventHandler(event,'move');
-    });
-
-    this.rootObject.addEventListener('stagemouseup', function(event) {
-      mouseEventHandler(event,'up');
-    });
 
     this.moveBtn.addEventListener("click", () => {
       this.goals.forEach((item) => {item.send()})

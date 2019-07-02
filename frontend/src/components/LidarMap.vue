@@ -132,7 +132,7 @@
                     <div class="input-group-prepend">
                       <div class="input-group-text">path</div>
                     </div>
-                    <input type="text" class="form-control" id="path_prohibition">
+                    <input type="text" v-bind:placeholder="this.path" class="form-control" id="path_prohibition">
                   </div>
                 </div>
                 <div class="col-auto">
@@ -203,6 +203,7 @@
 <script>
   import ROSLIB from "roslib"
   import draggable from "vuedraggable";
+  import { mapGetters } from 'vuex'
 
     export default {
       name: "LidarMap",
@@ -223,8 +224,7 @@
           poses: [],
           viewer: null,
           active_el: 0,
-          polygon_arr: [],
-          root_polygon: [],
+          polygons: [],
         };
       },
       display: "Custom Clone",
@@ -232,6 +232,7 @@
       components: {
         draggable
       },
+
       methods: {
         init_navigation_elements() {
           this.saverPose = document.getElementById("save_poses");
@@ -246,6 +247,7 @@
           this.loaderProhibition = document.getElementById("load_prohibition");
           this.path = '/home/ubuntu/max_test_trash/';
           this.mode = document.getElementById("mode");
+          this.polygon_arr = [];
 
           let ros = this.$store.getters.GET_ROS;
           this.viewer = new ROS2D.Viewer({
@@ -296,6 +298,7 @@
             LoadPose.callService(request, (result)=> {
               this.poses_list = result.waypoints.waypoints;
               this.navigator.poses = [];
+              localStorage.setItem('poses', JSON.stringify(this.poses_list));
               result['waypoints']['waypoints'].forEach((elem) => {
                 this.navigator.sendGoal(elem["pose"]);
               })
@@ -397,13 +400,13 @@
           });
 
           this.saverProhibition.addEventListener('click', () => {
-            this.root_polygon.push(this.navigator.new_polygon);
             let SaveProhibition = new ROSLIB.Service({
               ros,
               name: '/save_prohibition',
               serviceType: 'courier_file_server/SaveProhibition'
             });
             let points = [];
+            // let polygon_arr = [];
             this.navigator.new_polygon.forEach((elem) => {
               const point32_msg = new ROSLIB.Message({
                 x: elem.x,
@@ -421,6 +424,7 @@
               fill_polygons: false,
               polygons: this.polygon_arr
             });
+            this.polygons = prohibition_msg;
             let final_path = this.path + document.getElementById("filename_prohibition").value;
             let request = new ROSLIB.ServiceRequest({
               path :  final_path,
@@ -428,14 +432,12 @@
             });
             console.log(request);
             SaveProhibition.callService(request, (result)=> {
-              console.log(result);
-              this.clear_map();
+              this.loaderProhibition.click();
             });
-            this.navigator.putProhibitionPoint("delete");
-            // console.log(routes)
           });
 
           this.loaderProhibition.addEventListener('click', ()=> {
+            console.log("Start loading prohibition");
             // this.clear_map();
             let LoadProhibition = new ROSLIB.Service({
               ros,
@@ -446,24 +448,28 @@
             let request = new ROSLIB.ServiceRequest({
               path :  final_path
             });
-            console.log(request);
             LoadProhibition.callService(request, (result)=> {
-              console.log(result);
-              result.prohibition.polygons.forEach((elem) => {
-                var polygon = new ROS2D.PolygonMarker({
-                  lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
-                });
-
-                this.viewer.scene.addChild(polygon);
-                elem.points.forEach((point)=> {
-                  polygon.addPoint(point)
-                })
-              })
+              this.polygon_arr = result.prohibition.polygons;
+              this.polygons = result.prohibition;
+              localStorage.setItem('polygons', JSON.stringify(this.polygons));
+              console.log("store");
+              this.draw_polygons();
             })
           });
         },
         log: function(evt) {
           window.console.log(evt);
+        },
+        draw_polygons() {
+          this.polygons.polygons.forEach((elem) => {
+            const polygon = new ROS2D.PolygonMarker({
+              lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
+            });
+            this.viewer.scene.addChild(polygon);
+            elem.points.forEach((point)=> {
+              polygon.addPoint(point)
+            })
+          })
         },
         clear_map() {
           this.navigator.triangles.forEach((elem) => {
@@ -488,11 +494,20 @@
         },
         activate:function(el){
           this.active_el = el;
+        },
+        build_map() {
+          this.polygons = JSON.parse(localStorage.getItem('polygons'));
+          this.draw_polygons();
+          // this.poses_list = JSON.parse(localStorage.getItem('poses'));
+          // this.poses_list.forEach((elem) => {
+          //   this.navigator.sendGoal(elem["pose"]);
+          // })
         }
       },
-      mounted() {
-        this.init_navigation_elements();
-      }
+      async mounted() {
+        await this.init_navigation_elements();
+        this.build_map();
+      },
     }
 </script>
 <style scoped>

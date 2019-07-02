@@ -2,6 +2,7 @@
 * Основная часть приложения написана на VueJS
 * Для сборки использовался Vue-cli на базе Webpack
 * Для хранения состояний Vuex
+* Локализация реализована при помощи пакета vue-i18n, подробнее [здесь][8]
 
 Список доступных страниц доступен в папке router
 Все изменения состояний описанны в store
@@ -57,4 +58,6 @@ _На роботе:_
 [4]: https://github.com/RobotWebTools/rosbridge_suite "rosbridge_suite"
 [5]: https://ru.vuejs.org/v2/guide/installation.html "Vue"
 [6]: https://cli.vuejs.org/ "Vue-Cli"
+[7]: https://github.com/kazupon/vue-i18n "vue-i18n"
+[8]: documentation/localization.md "localization"
 
